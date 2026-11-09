@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ROUTES_DATA, CITIES } from "../data/travelData";
-import { generateTravelWALink } from "../utils/whatsapp";
+import { generateBookingWALink } from "../utils/whatsapp";
 
 const ADMIN_PASSWORD = "ahokadmin";
 
@@ -15,6 +15,16 @@ export default function TravelSearch() {
   const [passengerCount, setPassengerCount] = useState(1);
   const [bookingCode, setBookingCode] = useState("");
   const [isPaid, setIsPaid] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    count: 1,
+    pickup: "",
+    destinationAddr: "",
+    paymentMethod: "Transfer",
+  });
+  const [downloadCode, setDownloadCode] = useState("");
   const [adminMode, setAdminMode] = useState(
     () => (typeof window !== "undefined" ? localStorage.getItem("ahok_admin") === "1" : false)
   );
@@ -33,6 +43,35 @@ export default function TravelSearch() {
       alert("Password salah.");
     }
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react(set-state-in-effect)
+  useEffect(() => {
+    // Hidden admin access via URL param ?admin=1
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("admin") === "1" && !adminMode) {
+        const pwd = window.prompt("Masukkan password admin:");
+        if (pwd === ADMIN_PASSWORD) {
+          setAdminMode(true);
+          localStorage.setItem("ahok_admin", "1");
+        } else if (pwd !== null) {
+          alert("Password salah.");
+        }
+      }
+    } catch {
+      // ignore
+    }
+    // Hidden admin access via keyboard shortcut Ctrl+Shift+M
+    const handler = (e) => {
+      if (e.ctrlKey && e.shiftKey && (e.key === "M" || e.key === "m")) {
+        e.preventDefault();
+        toggleAdminMode();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminMode]);
 
   const handleSwitch = () => {
     setOrigin(destination);
@@ -58,7 +97,7 @@ export default function TravelSearch() {
     );
     const code = "AHOK-" + Math.random().toString(36).substring(2, 8).toUpperCase();
     setResult(route || null);
-    setSelectedSchedule(route ? route.schedules[0] : "");
+    setSelectedSchedule("");
     setBookingCode(route ? code : "");
     setIsPaid(route ? localStorage.getItem("paid_" + code) === "1" : false);
     setIsSubmitted(true);
@@ -88,6 +127,14 @@ export default function TravelSearch() {
 
   const downloadTicket = async () => {
     if (!result || !isPaid) return;
+    if (!selectedSchedule) {
+      alert("Jam keberangkatan harus dipilih.");
+      return;
+    }
+    if (downloadCode.trim().toUpperCase() !== bookingCode) {
+      alert("Masukkan kode booking yang sesuai untuk mengunduh E-Tiket.");
+      return;
+    }
     const [{ jsPDF }, JsBarcode] = await Promise.all([
       import("jspdf"),
       import("jsbarcode").then((m) => m.default || m),
@@ -151,10 +198,14 @@ export default function TravelSearch() {
     y += 8;
 
     const rows = [
+      ["Kode Booking", bookingCode],
       ["Nama Penumpang", name],
+      ["No Tlp / WA", formData.phone || "-"],
       ["Jumlah", `${count} orang`],
       ["Rute", `${result.origin} - ${result.destination}`],
       ["Jadwal", schedule],
+      ["Alamat Jemput", formData.pickup || "-"],
+      ["Alamat Tujuan", formData.destinationAddr || "-"],
       ["Harga Tiket", priceText],
       ["Total", totalText],
       ["Fasilitas", result.facilities.join(", ")],
@@ -208,21 +259,12 @@ export default function TravelSearch() {
   return (
     <section className="max-w-3xl mx-auto px-4 py-8">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 md:p-8 transition-colors">
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300">
-            Cari Jadwal &amp; Harga Travel
-          </h3>
-          <button
-            type="button"
-            onClick={toggleAdminMode}
-            className="text-xs px-2 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            {adminMode ? "Keluar Admin" : "Mode Admin"}
-          </button>
-        </div>
+        <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
+          Cari Jadwal &amp; Harga Travel
+        </h3>
         {adminMode && (
           <div className="mb-4 px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs font-semibold">
-            Mode Admin aktif — Anda dapat menandai pembayaran lunas.
+            Mode Admin aktif — Anda dapat menandai pembayaran lunas. (Ctrl+Shift+M untuk keluar)
           </div>
         )}
         <div className="overflow-hidden rounded-lg bg-red-600 text-yellow-300 py-2 mb-4 shadow">
@@ -329,7 +371,7 @@ export default function TravelSearch() {
 
             <div className="mb-4">
               <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Pilih Jam Keberangkatan:
+                Pilih Jam Keberangkatan: <span className="text-red-500">*</span>
               </p>
               <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
                 {result.schedules.map((s) => (
@@ -347,6 +389,11 @@ export default function TravelSearch() {
                   </button>
                 ))}
               </div>
+              {!selectedSchedule && (
+                <p className="mt-2 text-xs text-red-500">
+                  Jam keberangkatan harus dipilih sebelum melanjutkan.
+                </p>
+              )}
             </div>
 
             <div className="mb-4">
@@ -365,75 +412,208 @@ export default function TravelSearch() {
               </div>
             </div>
 
-            <a
-              href={generateTravelWALink(
-                result.origin,
-                result.destination,
-                result.price,
-                selectedSchedule,
-                bookingCode
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm md:text-base font-semibold hover:bg-emerald-600 transition shadow text-center"
-            >
-              Tanya / Pesan Tiket via WhatsApp
-            </a>
+            <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4 space-y-3">
+              {/* Form Pemesanan */}
+              <button
+                type="button"
+                onClick={() => setShowForm((v) => !v)}
+                className="flex items-center justify-center w-full min-h-[44px] px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm md:text-base font-semibold hover:bg-indigo-700 transition shadow text-center"
+              >
+                {showForm ? "Tutup Form Pemesanan" : "Form Pemesanan"}
+              </button>
 
-            <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Data Penumpang (untuk E-Tiket PDF)
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {showForm && (
+                <div className="space-y-2 bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Kode Booking
+                    </label>
+                    <input
+                      type="text"
+                      readOnly
+                      value={bookingCode}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Nama
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      No Tlp / WA
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Jumlah Penumpang
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      required
+                      value={formData.count}
+                      onChange={(e) => setFormData({ ...formData, count: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Alamat Jemput
+                    </label>
+                    <textarea
+                      required
+                      rows={2}
+                      value={formData.pickup}
+                      onChange={(e) => setFormData({ ...formData, pickup: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Alamat Tujuan
+                    </label>
+                    <textarea
+                      required
+                      rows={2}
+                      value={formData.destinationAddr}
+                      onChange={(e) => setFormData({ ...formData, destinationAddr: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Metode Pembayaran
+                    </label>
+                    <select
+                      required
+                      value={formData.paymentMethod}
+                      onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    >
+                      <option value="Transfer">Transfer</option>
+                      <option value="Bayar ke Driver (Bayar Atas)">Bayar ke Driver (Bayar Atas)</option>
+                    </select>
+                  </div>
+                  <a
+                    href={generateBookingWALink({
+                      bookingCode,
+                      name: formData.name,
+                      phone: formData.phone,
+                      count: formData.count,
+                      pickup: formData.pickup,
+                      destinationAddr: formData.destinationAddr,
+                      paymentMethod: formData.paymentMethod,
+                      origin,
+                      destination,
+                      schedule: selectedSchedule || (result ? result.schedules[0] : ""),
+                      price: result ? result.price : null,
+                    })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (!selectedSchedule) {
+                        e.preventDefault();
+                        alert("Jam keberangkatan harus dipilih.");
+                        return;
+                      }
+                      if (!formData.name || !formData.phone || !formData.pickup || !formData.destinationAddr) {
+                        e.preventDefault();
+                        alert("Lengkapi form pemesanan (Nama, No Tlp/WA, Alamat Jemput, Alamat Tujuan).");
+                        return;
+                      }
+                      setPassengerName(formData.name);
+                      setPassengerCount(Number(formData.count) || 1);
+                      try {
+                        localStorage.setItem(
+                          "booking_" + bookingCode,
+                          JSON.stringify({
+                            code: bookingCode,
+                            name: formData.name,
+                            phone: formData.phone,
+                            count: formData.count,
+                            pickup: formData.pickup,
+                            destinationAddr: formData.destinationAddr,
+                            paymentMethod: formData.paymentMethod,
+                            origin,
+                            destination,
+                            schedule: selectedSchedule,
+                            price: result ? result.price : null,
+                          })
+                        );
+                      } catch {
+                        // ignore
+                      }
+                    }}
+                    className="flex items-center justify-center gap-2 w-full min-h-[44px] px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition shadow text-center"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Kirim Form Pemesanan ke Admin (WhatsApp)
+                  </a>
+                </div>
+              )}
+
+              {/* Download E-Tiket */}
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                  Masukkan Kode Booking untuk Download E-Tiket
+                </label>
                 <input
                   type="text"
-                  placeholder="Nama Penumpang"
-                  value={passengerName}
-                  onChange={(e) => setPassengerName(e.target.value)}
-                  className="h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  placeholder="Kode Booking"
+                  value={downloadCode}
+                  onChange={(e) => setDownloadCode(e.target.value)}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
                 />
-                <input
-                  type="number"
-                  min="1"
-                  placeholder="Jumlah"
-                  value={passengerCount}
-                  onChange={(e) => setPassengerCount(e.target.value)}
-                  className="h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                />
+                {isPaid ? (
+                  <button
+                    type="button"
+                    onClick={downloadTicket}
+                    className="flex items-center justify-center w-full min-h-[44px] px-4 py-2 rounded-lg bg-blue-900 text-white text-sm md:text-base font-semibold hover:bg-blue-800 transition shadow text-center"
+                  >
+                    Download E-Tiket (PDF)
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled
+                    className="flex items-center justify-center w-full min-h-[44px] px-4 py-2 rounded-lg bg-gray-400 text-white text-sm md:text-base font-semibold cursor-not-allowed shadow text-center"
+                  >
+                    Download E-Tiket (Menunggu Pembayaran / Kode)
+                  </button>
+                )}
+                {adminMode && !isPaid && (
+                  <button
+                    type="button"
+                    onClick={markPaid}
+                    className="flex items-center justify-center w-full min-h-[40px] px-4 py-2 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition shadow text-center"
+                  >
+                    Tandai Lunas (Admin)
+                  </button>
+                )}
+                {isPaid && (
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 text-center">
+                    Pembayaran lunas — E-Tiket siap diunduh. Kode: {bookingCode}
+                  </p>
+                )}
               </div>
-
-              {isPaid ? (
-                <button
-                  type="button"
-                  onClick={downloadTicket}
-                  className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-blue-900 text-white text-sm md:text-base font-semibold hover:bg-blue-800 transition shadow text-center"
-                >
-                  Download E-Tiket (PDF)
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  disabled
-                  className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-gray-400 text-white text-sm md:text-base font-semibold cursor-not-allowed shadow text-center"
-                >
-                  Download E-Tiket (Menunggu Pembayaran)
-                </button>
-              )}
-
-              {adminMode && !isPaid && (
-                <button
-                  type="button"
-                  onClick={markPaid}
-                  className="mt-2 flex items-center justify-center w-full min-h-[40px] px-4 py-2 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition shadow text-center"
-                >
-                  Tandai Lunas (Admin)
-                </button>
-              )}
-              {isPaid && (
-                <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400 text-center">
-                  Pembayaran lunas — E-Tiket siap diunduh. Kode: {bookingCode}
-                </p>
-              )}
             </div>
           </div>
         )}
