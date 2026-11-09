@@ -40,7 +40,7 @@ export default function TravelSearch() {
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 md:p-8 transition-colors">
         <div className="overflow-hidden rounded-lg bg-red-600 text-yellow-300 py-2 mb-4 shadow">
           <div className="animate-marquee text-base md:text-lg font-extrabold tracking-wide">
-            PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10% &nbsp;&nbsp;&nbsp; PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10% &nbsp;&nbsp;&nbsp; PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10%
+            PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </div>
         </div>
         <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
@@ -129,32 +129,31 @@ export default function TravelSearch() {
               <h4 className="text-lg font-bold text-blue-900 dark:text-blue-300">
                 {result.origin} → {result.destination}
               </h4>
-              <span className="text-lg font-bold text-amber-600">
-                {result.price
-                  ? `Rp ${result.price.toLocaleString("id-ID")}`
-                  : "Tlp/Chat Admin"}
-                {result.price && (
-                  <span className="text-sm font-normal text-gray-500"> / orang</span>
-                )}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <span className="text-lg font-bold text-amber-600 whitespace-nowrap">
+                  {result.price
+                    ? `Rp ${result.price.toLocaleString("id-ID")} / orang`
+                    : "Tlp/Chat Admin"}
+                </span>
                 {result.promo && (
-                  <span className="ml-2 text-xs font-semibold px-2 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                  <span className="text-xs font-semibold px-2 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 w-fit">
                     Promo: {result.promo}
                   </span>
                 )}
-              </span>
+              </div>
             </div>
 
             <div className="mb-4">
               <p className="text-sm font-medium text-gray-700 mb-2">
                 Pilih Jam Keberangkatan:
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
                 {result.schedules.map((s) => (
                   <button
                     key={s}
                     type="button"
                     onClick={() => setSelectedSchedule(s)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition ${
+                    className={`px-2 py-2 rounded-lg text-xs md:text-sm font-medium border transition ${
                       selectedSchedule === s
                         ? "bg-blue-900 text-white border-blue-900"
                         : "bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-500 hover:border-blue-900"
@@ -189,7 +188,7 @@ export default function TravelSearch() {
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-center h-12 leading-[3rem] rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition shadow"
+              className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm md:text-base font-semibold hover:bg-emerald-600 transition shadow text-center"
             >
               Tanya / Pesan Tiket via WhatsApp
             </a>

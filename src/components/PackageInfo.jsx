@@ -64,7 +64,7 @@ export default function PackageInfo() {
           href={generatePackageWALink()}
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-center h-12 leading-[3rem] rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition shadow"
+          className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm md:text-base font-semibold hover:bg-emerald-600 transition shadow text-center"
         >
           Tanya / Kirim Paket via WhatsApp
         </a>
