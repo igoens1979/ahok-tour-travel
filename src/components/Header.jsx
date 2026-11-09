@@ -36,9 +36,6 @@ export default function Header() {
         </svg>
       </div>
 
-      {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 via-transparent to-black/40" />
-
       {/* Branding */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 py-10">
         <img
