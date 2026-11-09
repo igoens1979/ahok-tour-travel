@@ -246,8 +246,6 @@ export default function TravelSearch() {
       "Persiapan 1 jam sebelum Jadwal keberangkatan.",
       "Harga dapat berubah jika membawa kelebihan Bagasi, dan Tujuan di Luar Batas pengantaran. Konsultasikan ke Admin.",
       "E-tiket ini merupakan bukti pemesanan. Konfirmasi ketersediaan kursi via WhatsApp Admin.",
-      "Harap tiba di titik penjemputan 15 menit sebelum jadwal keberangkatan.",
-      "Tunjukkan e-tiket (cetak/HP) dan kode booking saat proses boarding.",
     ];
     notes.forEach((n) => {
       doc.text(n, margin, y, { maxWidth: pageW - 2 * margin });
