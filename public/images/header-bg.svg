@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520" width="1280" height="520" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="45%" stop-color="#1e40af"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="520" fill="url(#sky)"/>
+  <!-- sun -->
+  <circle cx="1080" cy="110" r="46" fill="#fde68a" opacity="0.9"/>
+  <!-- distant mountains -->
+  <path d="M0,360 L120,260 L260,340 L420,230 L560,320 L720,210 L880,300 L1040,220 L1280,320 L1280,420 L0,420 Z" fill="#1e3a8a" opacity="0.55"/>
+  <path d="M0,400 L180,320 L360,380 L540,300 L720,360 L900,290 L1080,350 L1280,310 L1280,440 L0,440 Z" fill="#1e40af" opacity="0.45"/>
+  <!-- ground -->
+  <rect y="440" width="1280" height="80" fill="#14532d"/>
+  <!-- road -->
+  <rect y="455" width="1280" height="30" fill="url(#road)"/>
+  <g stroke="#f8fafc" stroke-width="3" stroke-dasharray="30,20">
+    <line x1="0" y1="470" x2="1280" y2="470"/>
+  </g>
+  <!-- travel bus -->
+  <g transform="translate(260,420)">
+    <rect x="0" y="-55" width="200" height="55" rx="8" fill="#f59e0b" stroke="#78350f" stroke-width="2"/>
+    <rect x="15" y="-80" width="170" height="30" rx="6" fill="#fde68a" stroke="#78350f" stroke-width="2"/>
+    <rect x="25" y="-75" width="40" height="20" rx="3" fill="#93c5fd"/>
+    <rect x="75" y="-75" width="40" height="20" rx="3" fill="#93c5fd"/>
+    <rect x="125" y="-75" width="40" height="20" rx="3" fill="#93c5fd"/>
+    <circle cx="40" cy="0" r="14" fill="#1e293b"/>
+    <circle cx="40" cy="0" r="7" fill="#94a3b8"/>
+    <circle cx="160" cy="0" r="14" fill="#1e293b"/>
+    <circle cx="160" cy="0" r="7" fill="#94a3b8"/>
+  </g>
+  <!-- clouds -->
+  <g fill="#ffffff" opacity="0.25">
+    <ellipse cx="200" cy="90" rx="90" ry="28"/>
+    <ellipse cx="520" cy="70" rx="110" ry="32"/>
+    <ellipse cx="820" cy="100" rx="100" ry="28"/>
+  </g>
+  <!-- stars -->
+  <g fill="#fde68a" opacity="0.6">
+    <circle cx="100" cy="60" r="2"/>
+    <circle cx="400" cy="40" r="1.5"/>
+    <circle cx="700" cy="55" r="2"/>
+    <circle cx="950" cy="45" r="1.5"/>
+  </g>
+</svg>
