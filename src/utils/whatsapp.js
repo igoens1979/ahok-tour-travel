@@ -1,12 +1,15 @@
 // Ganti dengan nomor WhatsApp admin yang aktif (format 628xxxxxxxxxx)
-export const WHATSAPP_NUMBER = "6288123456789";
+export const WHATSAPP_NUMBER = "6281334987505";
 
 export const generateTravelWALink = (origin, destination, price, schedule) => {
+  const priceText = price
+    ? `Rp ${price.toLocaleString("id-ID")} / orang`
+    : "Tlp/Chat Admin";
   const text = `Halo Admin AHOK Tour & Travel, saya ingin pesan tiket travel:
 
 - *Rute:* ${origin} -> ${destination}
 - *Jadwal:* ${schedule}
-- *Harga:* Rp ${price.toLocaleString("id-ID")} / orang
+- *Harga:* ${priceText}
 
 Mohon info ketersediaan kursi untuk rute ini. Terima kasih.`;
 
