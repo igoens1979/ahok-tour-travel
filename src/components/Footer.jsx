@@ -20,6 +20,8 @@ export default function Footer() {
             WhatsApp: +{WHATSAPP_NUMBER}
           </a>
           <span className="hidden sm:inline text-gray-400 dark:text-gray-600">|</span>
+          <span className="text-gray-600 dark:text-gray-400">BCA: 0123456789</span>
+          <span className="hidden sm:inline text-gray-400 dark:text-gray-600">|</span>
           <span className="text-gray-600 dark:text-gray-400">Email: info@ahoktourtravel.com</span>
         </div>
         <p className="text-xs text-gray-500 dark:text-gray-500 mt-6">
