@@ -9,6 +9,8 @@ export default function TravelSearch() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [selectedSchedule, setSelectedSchedule] = useState("");
+  const [passengerName, setPassengerName] = useState("");
+  const [passengerCount, setPassengerCount] = useState(1);
 
   const handleSwitch = () => {
     setOrigin(destination);
@@ -16,6 +18,66 @@ export default function TravelSearch() {
     setIsSubmitted(false);
     setResult(null);
     setError("");
+  };
+
+  const downloadTicket = async () => {
+    if (!result) return;
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF();
+    const bookingCode = "AHOK-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const name = passengerName.trim() || "Penumpang";
+    const count = Math.max(1, Number(passengerCount) || 1);
+    const priceText = result.price
+      ? `Rp ${result.price.toLocaleString("id-ID")} / orang`
+      : "Tlp/Chat Admin";
+    const totalText = result.price
+      ? `Rp ${(result.price * count).toLocaleString("id-ID")}`
+      : "Tlp/Chat Admin";
+
+    doc.setFillColor(30, 58, 138);
+    doc.rect(0, 0, 210, 30, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.text("AHOK Tour & Travel", 105, 14, { align: "center" });
+    doc.setFontSize(11);
+    doc.text("E-Tiket Travel", 105, 23, { align: "center" });
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    let y = 45;
+    const line = (label, value) => {
+      doc.setFont(undefined, "bold");
+      doc.text(label, 20, y);
+      doc.setFont(undefined, "normal");
+      doc.text(String(value), 70, y);
+      y += 8;
+    };
+
+    line("Kode Booking:", bookingCode);
+    line("Nama:", name);
+    line("Jumlah:", `${count} orang`);
+    line("Rute:", `${result.origin} -> ${result.destination}`);
+    line("Jadwal:", selectedSchedule || result.schedules[0]);
+    line("Harga:", priceText);
+    line("Total:", totalText);
+    line("Fasilitas:", result.facilities.join(", "));
+
+    y += 4;
+    doc.setDrawColor(30, 58, 138);
+    doc.line(20, y, 190, y);
+    y += 8;
+    doc.setFontSize(10);
+    doc.setTextColor(80, 80, 80);
+    doc.text(
+      "E-tiket ini merupakan bukti pemesanan. Konfirmasi ketersediaan kursi via WhatsApp Admin.",
+      20,
+      y,
+      { maxWidth: 170 }
+    );
+    y += 12;
+    doc.text("Terima kasih telah memilih AHOK Tour & Travel.", 20, y);
+
+    doc.save(`E-Tiket-${bookingCode}.pdf`);
   };
 
   const handleSearch = (e) => {
@@ -192,6 +254,36 @@ export default function TravelSearch() {
             >
               Tanya / Pesan Tiket via WhatsApp
             </a>
+
+            <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Data Penumpang (untuk E-Tiket PDF)
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                <input
+                  type="text"
+                  placeholder="Nama Penumpang"
+                  value={passengerName}
+                  onChange={(e) => setPassengerName(e.target.value)}
+                  className="h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="Jumlah"
+                  value={passengerCount}
+                  onChange={(e) => setPassengerCount(e.target.value)}
+                  className="h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={downloadTicket}
+                className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-blue-900 text-white text-sm md:text-base font-semibold hover:bg-blue-800 transition shadow text-center"
+              >
+                Download E-Tiket (PDF)
+              </button>
+            </div>
           </div>
         )}
 
