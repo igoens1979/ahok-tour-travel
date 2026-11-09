@@ -49,6 +49,11 @@ export default function TravelSearch() {
     // Hidden admin access via URL param ?admin=1
     try {
       const params = new URLSearchParams(window.location.search);
+      if (params.get("admin") === "0") {
+        localStorage.removeItem("ahok_admin");
+        setAdminMode(false);
+        return;
+      }
       if (params.get("admin") === "1" && !adminMode) {
         const pwd = window.prompt("Masukkan password admin:");
         if (pwd === ADMIN_PASSWORD) {

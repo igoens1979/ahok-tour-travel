@@ -14,12 +14,21 @@ export default function Header() {
     }, 1000);
     if (tapCount.current >= 3) {
       tapCount.current = 0;
-      const pwd = window.prompt("Masukkan password admin:");
-      if (pwd === ADMIN_PASSWORD) {
-        localStorage.setItem("ahok_admin", "1");
-        window.location.reload();
-      } else if (pwd !== null) {
-        alert("Password salah.");
+      const isAdmin = localStorage.getItem("ahok_admin") === "1";
+      if (isAdmin) {
+        const ok = window.confirm("Keluar dari Mode Admin?");
+        if (ok) {
+          localStorage.removeItem("ahok_admin");
+          window.location.reload();
+        }
+      } else {
+        const pwd = window.prompt("Masukkan password admin:");
+        if (pwd === ADMIN_PASSWORD) {
+          localStorage.setItem("ahok_admin", "1");
+          window.location.reload();
+        } else if (pwd !== null) {
+          alert("Password salah.");
+        }
       }
     }
   };
