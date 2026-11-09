@@ -267,11 +267,6 @@ export default function TravelSearch() {
             Mode Admin aktif — Anda dapat menandai pembayaran lunas. (Ctrl+Shift+M untuk keluar)
           </div>
         )}
-        <div className="overflow-hidden rounded-lg bg-red-600 text-yellow-300 py-2 mb-4 shadow">
-          <div className="animate-marquee text-base md:text-lg font-extrabold tracking-wide">
-            PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PROMO!! Pembayaran Tiket via Transfer DISCOUNT 10% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </div>
-        </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
           Pilih kota asal dan tujuan untuk melihat jadwal keberangkatan &amp; harga tiket.
         </p>
