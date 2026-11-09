@@ -177,7 +177,7 @@ export default function TravelSearch() {
               rel="noopener noreferrer"
               className="block w-full text-center h-12 leading-[3rem] rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition shadow"
             >
-              Pesan Tiket via WhatsApp
+              Tanya / Pesan Tiket via WhatsApp
             </a>
           </div>
         )}
