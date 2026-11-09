@@ -4,7 +4,7 @@ import { generatePackageWALink } from "../utils/whatsapp";
 export default function PackageInfo() {
   return (
     <section className="max-w-3xl mx-auto px-4 py-8">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 md:p-8 transition-colors">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 transition-colors border border-transparent dark:border-gray-800">
         <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-2">
           {PACKAGE_INFO.title}
         </h3>
@@ -36,7 +36,7 @@ export default function PackageInfo() {
               {PACKAGE_INFO.pricing.map((p, i) => (
                 <tr
                   key={p.category}
-                  className={i % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-700"}
+                  className={i % 2 === 0 ? "bg-white dark:bg-gray-900" : "bg-gray-50 dark:bg-gray-700"}
                 >
                   <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200">
                     {p.category}

@@ -258,7 +258,7 @@ export default function TravelSearch() {
 
   return (
     <section className="max-w-3xl mx-auto px-4 py-8">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 md:p-8 transition-colors">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 transition-colors border border-transparent dark:border-gray-800">
         <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
           Cari Jadwal &amp; Harga Travel
         </h3>
@@ -418,7 +418,7 @@ export default function TravelSearch() {
               </button>
 
               {showForm && (
-                <div className="space-y-2 bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                <div className="space-y-2 bg-white dark:bg-gray-900 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                   <div>
                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Kode Booking

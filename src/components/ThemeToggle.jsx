@@ -9,7 +9,7 @@ function getInitialDark() {
 }
 
 const btnBase =
-  "h-9 w-9 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur shadow flex items-center justify-center hover:scale-105 transition";
+  "h-9 w-9 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur shadow flex items-center justify-center hover:scale-105 transition";
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(getInitialDark);
