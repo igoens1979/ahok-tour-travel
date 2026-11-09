@@ -23,6 +23,37 @@ body {
   }
 }
 
+/* Animated travel background */
+@keyframes skyShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes roadMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes carMove {
+  0% { transform: translateX(-25%); }
+  100% { transform: translateX(125%); }
+}
+
+.animate-sky {
+  background: linear-gradient(120deg, #0f172a, #1e3a8a, #1d4ed8, #0f172a);
+  background-size: 300% 300%;
+  animation: skyShift 12s ease-in-out infinite;
+}
+
+.animate-road {
+  animation: roadMove 2s linear infinite;
+}
+
+.animate-car {
+  animation: carMove 8s linear infinite;
+}
+
 .animate-marquee {
   display: inline-block;
   animation: marquee 32s linear infinite;
