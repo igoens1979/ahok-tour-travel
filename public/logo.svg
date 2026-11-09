@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="56" fill="url(#g)" />
+  <path d="M30 72 L60 40 L90 72" stroke="#F59E0B" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <rect x="46" y="72" width="28" height="18" rx="3" fill="#F59E0B" />
+  <text x="60" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1E3A8A">AHOK</text>
+</svg>
