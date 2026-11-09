@@ -326,8 +326,11 @@ export default function TravelSearch() {
       alert("Masukkan kode booking.");
       return;
     }
+    if (localStorage.getItem("paid_" + code) === "1") {
+      alert("Status sudah LUNAS. Kode " + code + " tidak dapat ditandai ulang.");
+      return;
+    }
     localStorage.setItem("paid_" + code, "1");
-    // update stored booking isPaid if exists
     try {
       const raw = localStorage.getItem("booking_" + code);
       if (raw) {
@@ -340,6 +343,34 @@ export default function TravelSearch() {
     }
     alert("Kode " + code + " ditandai LUNAS.");
     setAdminCodeInput("");
+  };
+
+  const adminDownloadByCode = async () => {
+    const code = adminCodeInput.trim().toUpperCase();
+    if (!code) {
+      alert("Masukkan kode booking.");
+      return;
+    }
+    if (localStorage.getItem("paid_" + code) !== "1") {
+      alert("Pembayaran belum dikonfirmasi (belum lunas).");
+      return;
+    }
+    let booking = null;
+    try {
+      const raw = localStorage.getItem("booking_" + code);
+      if (raw) booking = JSON.parse(raw);
+    } catch {
+      booking = null;
+    }
+    if (!booking) {
+      alert(
+        "Data booking tidak ada di perangkat ini. Admin dapat membuat ulang: cari rute yang sama, isi Form Pemesanan dengan kode booking " +
+          code +
+          ", tandai lunas, lalu download."
+      );
+      return;
+    }
+    await generateTicketPDF({ ...booking, isPaid: true });
   };
 
   return (
@@ -756,6 +787,13 @@ export default function TravelSearch() {
               className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition shadow"
             >
               Tandai Lunas
+            </button>
+            <button
+              type="button"
+              onClick={adminDownloadByCode}
+              className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800 transition shadow"
+            >
+              Download E-Tiket (Admin)
             </button>
           </div>
         </div>
