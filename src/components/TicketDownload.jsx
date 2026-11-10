@@ -348,6 +348,74 @@ export default function TicketDownload() {
     alert("Kode " + c + " ditandai LUNAS.");
   };
 
+  // Apply paid link from URL (?dl=CODE&payload=BASE64) so passenger on another device can download
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const dl = params.get("dl");
+      if (!dl) return;
+      const codeVal = dl.trim().toUpperCase();
+      setCode(codeVal);
+      const payload = params.get("payload");
+      if (payload) {
+        try {
+          const decoded = JSON.parse(atob(payload));
+          if (decoded && decoded.booking) {
+            localStorage.setItem("booking_" + codeVal, JSON.stringify(decoded.booking));
+          }
+          if (decoded && decoded.paid) {
+            localStorage.setItem("paid_" + codeVal, "1");
+          }
+          if (decoded.booking && decoded.booking.type === "package") {
+            setTicketType("package");
+          } else if (decoded.booking && decoded.booking.type !== "package") {
+            setTicketType("travel");
+          }
+        } catch {
+          // ignore
+        }
+      }
+      // trust admin link: mark paid if payload indicates paid
+      if (params.get("paid") === "1") {
+        localStorage.setItem("paid_" + codeVal, "1");
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const generateDownloadLink = () => {
+    const c = code.trim().toUpperCase();
+    if (!c) {
+      alert("Masukkan kode booking.");
+      return;
+    }
+    if (localStorage.getItem("paid_" + c) !== "1") {
+      alert("Tandai lunas terlebih dahulu sebelum membuat link download.");
+      return;
+    }
+    let booking = null;
+    try {
+      const raw = localStorage.getItem("booking_" + c);
+      if (raw) booking = JSON.parse(raw);
+    } catch {
+      booking = null;
+    }
+    const payload = { code: c, booking, paid: true };
+    let encoded = "";
+    try {
+      encoded = btoa(JSON.stringify(payload));
+    } catch {
+      encoded = "";
+    }
+    const url = `${window.location.origin}${window.location.pathname}?dl=${encodeURIComponent(c)}&payload=${encodeURIComponent(encoded)}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => alert("Link download disalin ke clipboard.\nBagikan ke penumpang via WhatsApp.")).catch(() => alert(url));
+    } else {
+      alert(url);
+    }
+  };
+
   const handleAdminDownload = async () => {
     const c = code.trim().toUpperCase();
     if (!c) {
@@ -449,6 +517,13 @@ export default function TicketDownload() {
                 className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800 transition shadow"
               >
                 Download (Admin)
+              </button>
+              <button
+                type="button"
+                onClick={generateDownloadLink}
+                className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition shadow"
+              >
+                Salin Link Download (Admin)
               </button>
             </div>
           </div>
