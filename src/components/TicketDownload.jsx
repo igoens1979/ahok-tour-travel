@@ -186,7 +186,9 @@ async function generatePackageTicketPDF(booking) {
   const rows = [
     ["Kode Booking", code],
     ["Nama Pengirim", booking.name || "-"],
-    ["No Tlp / WA", booking.phone || "-"],
+    ["No Tlp / WA Pengirim", booking.phone || "-"],
+    ["Nama Penerima", booking.recipientName || "-"],
+    ["No Tlp / WA Penerima", booking.recipientPhone || "-"],
     ["Jenis Barang/Berat", booking.goods || "-"],
     ["Alamat Jemput", booking.pickup || "-"],
     ["Alamat Tujuan", booking.destinationAddr || "-"],

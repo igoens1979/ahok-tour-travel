@@ -6,6 +6,8 @@ export default function PackageInfo() {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    recipientName: "",
+    recipientPhone: "",
     goods: "",
     pickup: "",
     destinationAddr: "",
@@ -133,6 +135,30 @@ export default function PackageInfo() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nama Penerima
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.recipientName}
+                  onChange={(e) => setFormData({ ...formData, recipientName: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  No Tlp / WA Penerima
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.recipientPhone}
+                  onChange={(e) => setFormData({ ...formData, recipientPhone: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Jenis Barang / Berat
                 </label>
                 <input
@@ -183,7 +209,7 @@ export default function PackageInfo() {
               </div>
               <a
                 href={`https://wa.me/6281334987505?text=${encodeURIComponent(
-                  `Halo Admin AHOK Tour & Travel, saya ingin kirim paket:\n\n- Kode Booking: ${bookingCode}\n- Nama: ${formData.name}\n- No Tlp/WA: ${formData.phone}\n- Jenis Barang/Berat: ${formData.goods}\n- Alamat Jemput: ${formData.pickup}\n- Alamat Tujuan: ${formData.destinationAddr}\n- Metode Pembayaran: ${formData.paymentMethod}\n\nMohon info tarif dan jadwal penjemputan. Terima kasih.`
+                  `Halo Admin AHOK Tour & Travel, saya ingin kirim paket:\n\n- Kode Booking: ${bookingCode}\n- Nama Pengirim: ${formData.name}\n- No Tlp/WA Pengirim: ${formData.phone}\n- Nama Penerima: ${formData.recipientName}\n- No Tlp/WA Penerima: ${formData.recipientPhone}\n- Jenis Barang/Berat: ${formData.goods}\n- Alamat Jemput: ${formData.pickup}\n- Alamat Tujuan: ${formData.destinationAddr}\n- Metode Pembayaran: ${formData.paymentMethod}\n\nMohon info tarif dan jadwal penjemputan. Terima kasih.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -196,6 +222,8 @@ export default function PackageInfo() {
                         type: "package",
                         name: formData.name,
                         phone: formData.phone,
+                        recipientName: formData.recipientName,
+                        recipientPhone: formData.recipientPhone,
                         goods: formData.goods,
                         pickup: formData.pickup,
                         destinationAddr: formData.destinationAddr,
