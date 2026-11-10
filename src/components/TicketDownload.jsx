@@ -294,21 +294,6 @@ export default function TicketDownload() {
   }, [adminMode]);
   /* eslint-enable react(set-state-in-effect) */
 
-  const toggleAdminMode = () => {
-    if (adminMode) {
-      setAdminMode(false);
-      localStorage.removeItem("ahok_admin");
-      return;
-    }
-    const pwd = window.prompt("Masukkan password admin:");
-    if (pwd === "ahokadmin") {
-      setAdminMode(true);
-      localStorage.setItem("ahok_admin", "1");
-    } else if (pwd !== null) {
-      alert("Password salah.");
-    }
-  };
-
   const handleDownload = async () => {
     const c = code.trim().toUpperCase();
     if (!c) {
@@ -392,18 +377,9 @@ export default function TicketDownload() {
   return (
     <section className="max-w-3xl mx-auto px-4 py-8">
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800 transition-colors">
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300">
-            Download E-Tiket
-          </h3>
-          <button
-            type="button"
-            onClick={toggleAdminMode}
-            className="text-xs px-2 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            {adminMode ? "Keluar Admin" : "Mode Admin"}
-          </button>
-        </div>
+        <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
+          Download E-Tiket
+        </h3>
         {adminMode && (
           <div className="mb-4 px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs font-semibold">
             Mode Admin aktif.
