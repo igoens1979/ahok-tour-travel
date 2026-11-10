@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { PACKAGE_INFO } from "../data/packageData";
-import { generatePackageWALink } from "../utils/whatsapp";
+
 
 const ADMIN_PASSWORD = "ahokadmin";
 
@@ -41,7 +41,7 @@ export default function PackageInfo() {
     }
   };
 
-  // eslint-disable-next-line react(set-state-in-effect)
+  /* eslint-disable react(set-state-in-effect) */
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -81,6 +81,7 @@ export default function PackageInfo() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [adminMode]);
+  /* eslint-enable react(set-state-in-effect) */
 
   const generateCode = () => "PKG-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
@@ -341,15 +342,6 @@ export default function PackageInfo() {
             ))}
           </ul>
         </div>
-
-        <a
-          href={generatePackageWALink()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-full min-h-[48px] px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm md:text-base font-semibold hover:bg-emerald-600 transition shadow text-center"
-        >
-          Tanya / Kirim Paket via WhatsApp
-        </a>
 
         {/* Form Pemesanan Paket */}
         <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4 space-y-3">
