@@ -11,10 +11,9 @@ export default function TravelSearch() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [selectedSchedule, setSelectedSchedule] = useState("");
-  const [passengerName, setPassengerName] = useState("");
-  const [passengerCount, setPassengerCount] = useState(1);
+
   const [bookingCode, setBookingCode] = useState("");
-  const [isPaid, setIsPaid] = useState(false);
+
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -24,9 +23,7 @@ export default function TravelSearch() {
     destinationAddr: "",
     paymentMethod: "Transfer",
   });
-  const [downloadCode, setDownloadCode] = useState("");
-  const [standaloneCode, setStandaloneCode] = useState("");
-  const [adminCodeInput, setAdminCodeInput] = useState("");
+
   const [adminMode, setAdminMode] = useState(
     () => (typeof window !== "undefined" ? localStorage.getItem("ahok_admin") === "1" : false)
   );
@@ -87,7 +84,7 @@ export default function TravelSearch() {
     setResult(null);
     setError("");
     setBookingCode("");
-    setIsPaid(false);
+
   };
 
   const handleSearch = (e) => {
@@ -106,271 +103,8 @@ export default function TravelSearch() {
     setResult(route || null);
     setSelectedSchedule("");
     setBookingCode(route ? code : "");
-    setIsPaid(route ? localStorage.getItem("paid_" + code) === "1" : false);
+
     setIsSubmitted(true);
-  };
-
-  const markPaid = () => {
-    if (!bookingCode) return;
-    localStorage.setItem("paid_" + bookingCode, "1");
-    setIsPaid(true);
-  };
-
-  const svgToPng = (src, w, h) =>
-    new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/png"));
-      };
-      img.onerror = () => resolve(null);
-      img.src = src;
-    });
-
-  const generateTicketPDF = async (booking) => {
-    const code = booking.code || booking.bookingCode;
-    const isPaidFlag = booking.isPaid || localStorage.getItem("paid_" + code) === "1";
-    const [{ jsPDF }, JsBarcode] = await Promise.all([
-      import("jspdf"),
-      import("jsbarcode").then((m) => m.default || m),
-    ]);
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-
-    const name = (booking.name || "Penumpang").trim() || "Penumpang";
-    const count = Math.max(1, Number(booking.count) || 1);
-    const schedule = booking.schedule || "";
-    const price = booking.price;
-    const priceText = price
-      ? `Rp ${price.toLocaleString("id-ID")} / orang`
-      : "Tlp/Chat Admin";
-    const totalText = price
-      ? `Rp ${(price * count).toLocaleString("id-ID")}`
-      : "Tlp/Chat Admin";
-    const facilities = Array.isArray(booking.facilities) ? booking.facilities : [];
-
-    const logoData = await svgToPng("/logo.svg", 200, 200);
-
-    const barcodeCanvas = document.createElement("canvas");
-    JsBarcode(barcodeCanvas, code, {
-      format: "CODE128",
-      width: 2,
-      height: 50,
-      displayValue: true,
-      fontSize: 12,
-      margin: 4,
-    });
-    const barcodeData = barcodeCanvas.toDataURL("image/png");
-
-    const pageW = 210;
-    const margin = 15;
-
-    doc.setFillColor(30, 58, 138);
-    doc.rect(0, 0, pageW, 32, "F");
-    if (logoData) {
-      doc.addImage(logoData, "PNG", margin, 4, 24, 24);
-    }
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(18);
-    doc.setFont(undefined, "bold");
-    doc.text("AHOK Tour & Travel", margin + 28, 14);
-    doc.setFontSize(10);
-    doc.setFont(undefined, "normal");
-    doc.text("E-TIKET / BOARDING PASS", margin + 28, 22);
-
-    let y = 42;
-    doc.setTextColor(30, 58, 138);
-    doc.setFontSize(11);
-    doc.setFont(undefined, "bold");
-    doc.text("KODE BOOKING", margin, y);
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(20);
-    doc.text(code, margin, y + 9);
-
-    doc.addImage(barcodeData, "PNG", pageW - margin - 70, y - 4, 70, 24);
-
-    y += 22;
-    doc.setDrawColor(30, 58, 138);
-    doc.setLineWidth(0.5);
-    doc.line(margin, y, pageW - margin, y);
-    y += 8;
-
-    const rows = [
-      ["Kode Booking", code],
-      ["Nama Penumpang", name],
-      ["No Tlp / WA", booking.phone || "-"],
-      ["Jumlah", `${count} orang`],
-      ["Rute", `${booking.origin} - ${booking.destination}`],
-      ["Jadwal", schedule],
-      ["Alamat Jemput", booking.pickup || "-"],
-      ["Alamat Tujuan", booking.destinationAddr || "-"],
-      ["Metode Bayar", booking.paymentMethod || "-"],
-      ["Harga Tiket", priceText],
-      ["Total", totalText],
-      ["Fasilitas", facilities.join(", ") || "-"],
-    ];
-    doc.setFontSize(11);
-    rows.forEach(([label, value]) => {
-      doc.setFont(undefined, "bold");
-      doc.setTextColor(60, 60, 60);
-      doc.text(label, margin, y);
-      doc.setFont(undefined, "normal");
-      doc.setTextColor(0, 0, 0);
-      doc.text(String(value), margin + 40, y, { maxWidth: pageW - margin - (margin + 40) });
-      y += 8;
-    });
-
-    // Watermark LUNAS if paid
-    if (isPaidFlag) {
-      doc.saveGraphicsState();
-      doc.setTextColor(34, 197, 94);
-      doc.setFontSize(60);
-      doc.setFont(undefined, "bold");
-      doc.setGState(new doc.GState({ opacity: 0.18 }));
-      doc.text("LUNAS", pageW / 2, 170, { align: "center", angle: 30 });
-      doc.restoreGraphicsState();
-    }
-
-    y += 2;
-    doc.setDrawColor(200, 200, 200);
-    doc.line(margin, y, pageW - margin, y);
-    y += 8;
-
-    doc.setFontSize(9);
-    doc.setTextColor(90, 90, 90);
-    const notes = [
-      "Persiapan 1 jam sebelum Jadwal keberangkatan.",
-      "Harga dapat berubah jika membawa kelebihan Bagasi, dan Tujuan di Luar Batas pengantaran. Konsultasikan ke Admin.",
-      "E-tiket ini merupakan bukti pemesanan. Konfirmasi ketersediaan kursi via WhatsApp Admin.",
-    ];
-    notes.forEach((n) => {
-      doc.text(n, margin, y, { maxWidth: pageW - 2 * margin });
-      y += 6;
-    });
-
-    y += 4;
-    doc.setFontSize(10);
-    doc.setTextColor(30, 58, 138);
-    doc.setFont(undefined, "bold");
-    doc.text("Terima kasih telah memilih AHOK Tour & Travel.", margin, y);
-
-    doc.setFillColor(30, 58, 138);
-    doc.rect(0, 287, pageW, 10, "F");
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(8);
-    doc.setFont(undefined, "normal");
-    doc.text("AHOK Tour & Travel  •  Travel Antar Kota & Pengiriman Paket  •  WA: +6281334987505", pageW / 2, 293, { align: "center" });
-
-    doc.save(`E-Tiket-${code}.pdf`);
-  };
-
-  const downloadTicket = async () => {
-    if (!result || !isPaid) return;
-    if (!selectedSchedule) {
-      alert("Jam keberangkatan harus dipilih.");
-      return;
-    }
-    if (downloadCode.trim().toUpperCase() !== bookingCode) {
-      alert("Masukkan kode booking yang sesuai untuk mengunduh E-Tiket.");
-      return;
-    }
-    const booking = {
-      code: bookingCode,
-      name: passengerName || formData.name || "Penumpang",
-      phone: formData.phone,
-      count: passengerCount || formData.count,
-      pickup: formData.pickup,
-      destinationAddr: formData.destinationAddr,
-      paymentMethod: formData.paymentMethod,
-      origin: result.origin,
-      destination: result.destination,
-      schedule: selectedSchedule,
-      price: result.price,
-      facilities: result.facilities,
-      isPaid,
-    };
-    await generateTicketPDF(booking);
-  };
-
-  const downloadByCode = async () => {
-    const code = standaloneCode.trim().toUpperCase();
-    if (!code) {
-      alert("Masukkan kode booking.");
-      return;
-    }
-    let booking = null;
-    try {
-      const raw = localStorage.getItem("booking_" + code);
-      if (raw) booking = JSON.parse(raw);
-    } catch {
-      booking = null;
-    }
-    if (!booking) {
-      alert("Kode booking tidak ditemukan di perangkat ini.");
-      return;
-    }
-    if (localStorage.getItem("paid_" + code) !== "1") {
-      alert("Pembayaran belum dikonfirmasi admin.");
-      return;
-    }
-    await generateTicketPDF({ ...booking, isPaid: true });
-  };
-
-  const adminMarkPaidByCode = () => {
-    const code = adminCodeInput.trim().toUpperCase();
-    if (!code) {
-      alert("Masukkan kode booking.");
-      return;
-    }
-    if (localStorage.getItem("paid_" + code) === "1") {
-      alert("Status sudah LUNAS. Kode " + code + " tidak dapat ditandai ulang.");
-      return;
-    }
-    localStorage.setItem("paid_" + code, "1");
-    try {
-      const raw = localStorage.getItem("booking_" + code);
-      if (raw) {
-        const b = JSON.parse(raw);
-        b.isPaid = true;
-        localStorage.setItem("booking_" + code, JSON.stringify(b));
-      }
-    } catch {
-      // ignore
-    }
-    alert("Kode " + code + " ditandai LUNAS.");
-    setAdminCodeInput("");
-  };
-
-  const adminDownloadByCode = async () => {
-    const code = adminCodeInput.trim().toUpperCase();
-    if (!code) {
-      alert("Masukkan kode booking.");
-      return;
-    }
-    if (localStorage.getItem("paid_" + code) !== "1") {
-      alert("Pembayaran belum dikonfirmasi (belum lunas).");
-      return;
-    }
-    let booking = null;
-    try {
-      const raw = localStorage.getItem("booking_" + code);
-      if (raw) booking = JSON.parse(raw);
-    } catch {
-      booking = null;
-    }
-    if (!booking) {
-      alert(
-        "Data booking tidak ada di perangkat ini. Admin dapat membuat ulang: cari rute yang sama, isi Form Pemesanan dengan kode booking " +
-          code +
-          ", tandai lunas, lalu download."
-      );
-      return;
-    }
-    await generateTicketPDF({ ...booking, isPaid: true });
   };
 
   return (
@@ -649,8 +383,6 @@ export default function TravelSearch() {
                         alert("Lengkapi form pemesanan (Nama, No Tlp/WA, Alamat Jemput, Alamat Tujuan).");
                         return;
                       }
-                      setPassengerName(formData.name);
-                      setPassengerCount(Number(formData.count) || 1);
                       try {
                         localStorage.setItem(
                           "booking_" + bookingCode,
@@ -666,8 +398,6 @@ export default function TravelSearch() {
                             destination,
                             schedule: selectedSchedule,
                             price: result ? result.price : null,
-                            facilities: result ? result.facilities : [],
-                            isPaid: localStorage.getItem("paid_" + bookingCode) === "1",
                           })
                         );
                       } catch {
@@ -684,50 +414,6 @@ export default function TravelSearch() {
                 </div>
               )}
 
-              {/* Download E-Tiket */}
-              <div className="space-y-2">
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                  Masukkan Kode Booking untuk Download E-Tiket
-                </label>
-                <input
-                  type="text"
-                  placeholder="Kode Booking"
-                  value={downloadCode}
-                  onChange={(e) => setDownloadCode(e.target.value)}
-                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                />
-                {isPaid ? (
-                  <button
-                    type="button"
-                    onClick={downloadTicket}
-                    className="flex items-center justify-center w-full min-h-[44px] px-4 py-2 rounded-lg bg-blue-900 text-white text-sm md:text-base font-semibold hover:bg-blue-800 transition shadow text-center"
-                  >
-                    Download E-Tiket (PDF)
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    disabled
-                    className="flex items-center justify-center w-full min-h-[44px] px-4 py-2 rounded-lg bg-gray-400 text-white text-sm md:text-base font-semibold cursor-not-allowed shadow text-center"
-                  >
-                    Download E-Tiket (Menunggu Pembayaran / Kode)
-                  </button>
-                )}
-                {adminMode && !isPaid && (
-                  <button
-                    type="button"
-                    onClick={markPaid}
-                    className="flex items-center justify-center w-full min-h-[40px] px-4 py-2 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition shadow text-center"
-                  >
-                    Tandai Lunas (Admin)
-                  </button>
-                )}
-                {isPaid && (
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400 text-center">
-                    Pembayaran lunas — E-Tiket siap diunduh. Kode: {bookingCode}
-                  </p>
-                )}
-              </div>
             </div>
           </div>
         )}
@@ -739,65 +425,6 @@ export default function TravelSearch() {
           </div>
         )}
       </div>
-
-      {/* Download E-Tiket mandiri */}
-      <div className="mt-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800">
-        <h3 className="text-lg font-bold text-blue-900 dark:text-blue-300 mb-2">
-          Download E-Tiket
-        </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-          Masukkan Kode Booking Anda untuk mengunduh E-Tiket (setelah pembayaran
-          dikonfirmasi admin).
-        </p>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <input
-            type="text"
-            placeholder="Kode Booking"
-            value={standaloneCode}
-            onChange={(e) => setStandaloneCode(e.target.value)}
-            className="flex-1 h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-          />
-          <button
-            type="button"
-            onClick={downloadByCode}
-            className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800 transition shadow"
-          >
-            Download E-Tiket (PDF)
-          </button>
-        </div>
-      </div>
-
-      {/* Admin: tandai lunas by kode */}
-      {adminMode && (
-        <div className="mt-6 bg-amber-50 dark:bg-amber-900/20 rounded-2xl shadow-md p-6 md:p-8 border border-amber-200 dark:border-amber-800">
-          <h3 className="text-lg font-bold text-amber-800 dark:text-amber-300 mb-2">
-            Admin — Tandai Lunas by Kode Booking
-          </h3>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              placeholder="Kode Booking"
-              value={adminCodeInput}
-              onChange={(e) => setAdminCodeInput(e.target.value)}
-              className="flex-1 h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-            />
-            <button
-              type="button"
-              onClick={adminMarkPaidByCode}
-              className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition shadow"
-            >
-              Tandai Lunas
-            </button>
-            <button
-              type="button"
-              onClick={adminDownloadByCode}
-              className="flex items-center justify-center min-h-[40px] px-4 rounded-lg bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800 transition shadow"
-            >
-              Download E-Tiket (Admin)
-            </button>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

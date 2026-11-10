@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import TravelSearch from "./components/TravelSearch";
 import PackageInfo from "./components/PackageInfo";
+import TicketDownload from "./components/TicketDownload";
 import Footer from "./components/Footer";
 import ThemeToggle from "./components/ThemeToggle";
 
@@ -19,6 +20,7 @@ export default function App() {
       <main>
         <TravelSearch />
         <PackageInfo />
+        <TicketDownload />
       </main>
       <Footer />
     </div>
