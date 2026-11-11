@@ -205,7 +205,7 @@ export default function TravelSearch() {
                 <span className="text-lg font-bold text-amber-600 whitespace-nowrap">
                   {result.price
                     ? `Rp ${result.price.toLocaleString("id-ID")} / orang`
-                    : "Chat Admin 24 Jam"}
+                    : "Harga : Chat Admin 24 Jam"}
                 </span>
                 {result.promo && (
                   <span className="text-xs font-semibold px-2 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 w-fit">
