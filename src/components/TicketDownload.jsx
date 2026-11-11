@@ -33,7 +33,7 @@ async function generateTravelTicketPDF(booking) {
   const count = Math.max(1, Number(booking.count) || 1);
   const schedule = booking.schedule || "";
   const price = booking.price;
-  const priceText = price ? `Rp ${price.toLocaleString("id-ID")} / orang` : "Tlp/Chat Admin";
+  const priceText = price ? `Rp ${price.toLocaleString("id-ID")} / orang` : "Chat Admin 24 Jam";
   const totalText = price ? `Rp ${(price * count).toLocaleString("id-ID")}` : "Tlp/Chat Admin";
   const facilities = Array.isArray(booking.facilities) ? booking.facilities : [];
 

@@ -129,7 +129,7 @@ export const ROUTES_DATA = [
     origin: "Malang",
     destination: "Jember",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -137,7 +137,7 @@ export const ROUTES_DATA = [
     origin: "Malang",
     destination: "Banyuwangi",
     price: null,
-    schedules: ["07:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol"],
   },
   {
@@ -145,7 +145,7 @@ export const ROUTES_DATA = [
     origin: "Malang",
     destination: "Denpasar Bali",
     price: null,
-    schedules: ["18:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol", "Makan 1x"],
   },
   {
@@ -153,7 +153,7 @@ export const ROUTES_DATA = [
     origin: "Malang",
     destination: "Blitar Tulungagung dan Ponorogo",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -161,7 +161,7 @@ export const ROUTES_DATA = [
     origin: "Malang",
     destination: "Situbondo",
     price: null,
-    schedules: ["07:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -169,7 +169,7 @@ export const ROUTES_DATA = [
     origin: "Surabaya",
     destination: "Situbondo",
     price: null,
-    schedules: ["07:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -177,7 +177,7 @@ export const ROUTES_DATA = [
     origin: "Surabaya",
     destination: "Blitar",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -185,7 +185,7 @@ export const ROUTES_DATA = [
     origin: "Surabaya",
     destination: "Jember",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -193,7 +193,7 @@ export const ROUTES_DATA = [
     origin: "Surabaya",
     destination: "Lumajang",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -201,7 +201,7 @@ export const ROUTES_DATA = [
     origin: "Surabaya",
     destination: "Bondowoso",
     price: null,
-    schedules: ["07:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -209,7 +209,7 @@ export const ROUTES_DATA = [
     origin: "Surabaya",
     destination: "Blora",
     price: null,
-    schedules: ["07:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -217,7 +217,7 @@ export const ROUTES_DATA = [
     origin: "Kediri",
     destination: "Pacitan",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
   {
@@ -225,7 +225,7 @@ export const ROUTES_DATA = [
     origin: "Kediri",
     destination: "Madiun",
     price: null,
-    schedules: ["07:00 WIB", "13:00 WIB", "19:00 WIB"],
+    schedules: ["Chat Admin 24 Jam"],
     facilities: ["Door to Door", "AC", "Reclining Seat"],
   },
 ];

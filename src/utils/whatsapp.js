@@ -4,7 +4,7 @@ export const WHATSAPP_NUMBER = "6281334987505";
 export const generateTravelWALink = (origin, destination, price, schedule, bookingCode) => {
   const priceText = price
     ? `Rp ${price.toLocaleString("id-ID")} / orang`
-    : "Tlp/Chat Admin";
+    : "Chat Admin 24 Jam";
   const codeLine = bookingCode ? `- *Kode Booking:* ${bookingCode}\n` : "";
   const text = `Halo Admin AHOK Tour & Travel, saya ingin pesan tiket travel:
 
