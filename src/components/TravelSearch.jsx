@@ -22,6 +22,8 @@ export default function TravelSearch() {
     pickup: "",
     destinationAddr: "",
     paymentMethod: "Transfer",
+    confirmedSchedule: "",
+    confirmedPrice: "",
   });
 
   const [adminMode, setAdminMode] = useState(
@@ -106,6 +108,16 @@ export default function TravelSearch() {
 
     setIsSubmitted(true);
   };
+
+  const finalSchedule =
+    formData.confirmedSchedule.trim() ||
+    selectedSchedule ||
+    (result ? result.schedules[0] : "");
+  const finalPrice = formData.confirmedPrice
+    ? Number(formData.confirmedPrice)
+    : result
+    ? result.price
+    : null;
 
   return (
     <section className="max-w-3xl mx-auto px-4 py-8">
@@ -351,6 +363,30 @@ export default function TravelSearch() {
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Jadwal Konfirmasi Admin (opsional)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="cth: 08:00 WIB"
+                      value={formData.confirmedSchedule}
+                      onChange={(e) => setFormData({ ...formData, confirmedSchedule: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Harga Konfirmasi Admin (opsional)
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="cth: 150000"
+                      value={formData.confirmedPrice}
+                      onChange={(e) => setFormData({ ...formData, confirmedPrice: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Metode Pembayaran
                     </label>
                     <select
@@ -374,13 +410,13 @@ export default function TravelSearch() {
                       paymentMethod: formData.paymentMethod,
                       origin,
                       destination,
-                      schedule: selectedSchedule || (result ? result.schedules[0] : ""),
-                      price: result ? result.price : null,
+                      schedule: finalSchedule,
+                      price: finalPrice,
                     })}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => {
-                      if (!selectedSchedule) {
+                      if (!finalSchedule) {
                         e.preventDefault();
                         alert("Jam keberangkatan harus dipilih.");
                         return;
@@ -403,8 +439,8 @@ export default function TravelSearch() {
                             paymentMethod: formData.paymentMethod,
                             origin,
                             destination,
-                            schedule: selectedSchedule,
-                            price: result ? result.price : null,
+                            schedule: finalSchedule,
+                            price: finalPrice,
                           })
                         );
                       } catch {
