@@ -240,6 +240,13 @@ export default function TravelSearch() {
                   Jam keberangkatan harus dipilih sebelum melanjutkan.
                 </p>
               )}
+              {!result.price && (
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  Harga &amp; jadwal dikonfirmasi admin via WhatsApp (24 jam). Setelah
+                  chat admin, pilih &quot;Chat Admin 24 Jam&quot; lalu isi Form
+                  Pemesanan.
+                </p>
+              )}
             </div>
 
             <div className="mb-4">
