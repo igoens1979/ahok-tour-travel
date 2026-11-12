@@ -33,9 +33,8 @@ export default function Footer() {
             <img src="/images/dana-logo.png" alt="DANA" className="h-8 w-auto" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center gap-1">
             <img src="/images/gopay-logo.png" alt="GoPay" className="h-8 w-auto" />
-            <span className="text-sm font-semibold text-green-600 dark:text-green-400">GoPay</span>
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
         </div>
