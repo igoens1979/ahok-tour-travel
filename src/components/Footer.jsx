@@ -2,15 +2,6 @@ import { WHATSAPP_NUMBER } from "../utils/whatsapp";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-const DanaLogo = () => (
-  <svg viewBox="0 0 120 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg" aria-label="DANA">
-    <rect width="120" height="40" rx="8" fill="#118EEA" />
-    <text x="60" y="27" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="bold" fill="#ffffff" letterSpacing="1">
-      DANA
-    </text>
-  </svg>
-);
-
 export default function Footer() {
   return (
     <footer className="mt-8 border-t border-gray-200 dark:border-gray-800">
@@ -39,7 +30,7 @@ export default function Footer() {
             <span className="text-xs text-gray-600 dark:text-gray-400">1250864121</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <DanaLogo />
+            <img src="/images/dana-logo.png" alt="DANA" className="h-8 w-auto" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
