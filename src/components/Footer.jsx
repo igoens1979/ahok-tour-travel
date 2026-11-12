@@ -1,8 +1,43 @@
+import { useEffect, useState } from "react";
 import { WHATSAPP_NUMBER } from "../utils/whatsapp";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-// DANA and GoPay logos use real images from public/images
+// Removes near-white background from a JPG and returns a transparent PNG data URL.
+function TransparentLogo({ src, alt, className }) {
+  const [dataUrl, setDataUrl] = useState(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        // treat near-white pixels as transparent
+        if (r > 235 && g > 235 && b > 235) {
+          data[i + 3] = 0;
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+      setDataUrl(canvas.toDataURL("image/png"));
+    };
+    img.src = src;
+  }, [src]);
+
+  if (!dataUrl) {
+    return <img src={src} alt={alt} className={className} />;
+  }
+  return <img src={dataUrl} alt={alt} className={className} />;
+}
 
 export default function Footer() {
   return (
@@ -32,11 +67,11 @@ export default function Footer() {
             <span className="text-xs text-gray-600 dark:text-gray-400">1250864121</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <img src="/images/dana-logo.jpg" alt="DANA" className="h-8 w-auto rounded" />
+            <TransparentLogo src="/images/dana-logo.jpg" alt="DANA" className="h-8 w-auto" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <img src="/images/gopay-logo.jpg" alt="GoPay" className="h-8 w-auto rounded" />
+            <TransparentLogo src="/images/gopay-logo.jpg" alt="GoPay" className="h-8 w-auto" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
         </div>
