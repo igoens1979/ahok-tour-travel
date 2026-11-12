@@ -253,6 +253,7 @@ export default function TicketDownload() {
   const [ticketType, setTicketType] = useState("travel");
   const [code, setCode] = useState("");
   const [adminCodeInput, setAdminCodeInput] = useState("");
+  const [autoMsg, setAutoMsg] = useState("");
 
   /* eslint-disable react(set-state-in-effect) */
   useEffect(() => {
@@ -350,38 +351,65 @@ export default function TicketDownload() {
 
   // Apply paid link from URL (?dl=CODE&payload=BASE64) so passenger on another device can download
   useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const dl = params.get("dl");
-      if (!dl) return;
-      const codeVal = dl.trim().toUpperCase();
-      setCode(codeVal);
-      const payload = params.get("payload");
-      if (payload) {
-        try {
-          const decoded = JSON.parse(atob(payload));
-          if (decoded && decoded.booking) {
-            localStorage.setItem("booking_" + codeVal, JSON.stringify(decoded.booking));
+    (async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const dl = params.get("dl");
+        if (!dl) return;
+        const codeVal = dl.trim().toUpperCase();
+        setCode(codeVal);
+        const payload = params.get("payload");
+        if (payload) {
+          try {
+            const decoded = JSON.parse(atob(payload));
+            if (decoded && decoded.booking) {
+              localStorage.setItem("booking_" + codeVal, JSON.stringify(decoded.booking));
+            }
+            if (decoded && decoded.paid) {
+              localStorage.setItem("paid_" + codeVal, "1");
+            }
+            if (decoded.booking && decoded.booking.type === "package") {
+              setTicketType("package");
+            } else if (decoded.booking && decoded.booking.type !== "package") {
+              setTicketType("travel");
+            }
+          } catch {
+            // ignore
           }
-          if (decoded && decoded.paid) {
-            localStorage.setItem("paid_" + codeVal, "1");
-          }
-          if (decoded.booking && decoded.booking.type === "package") {
-            setTicketType("package");
-          } else if (decoded.booking && decoded.booking.type !== "package") {
-            setTicketType("travel");
-          }
-        } catch {
-          // ignore
         }
+        if (params.get("paid") === "1") {
+          localStorage.setItem("paid_" + codeVal, "1");
+        }
+        // Auto-download after a short delay to allow state/localStorage to settle
+        setAutoMsg("Mengunduh E-Tiket...");
+        setTimeout(async () => {
+          try {
+            let booking = null;
+            const raw = localStorage.getItem("booking_" + codeVal);
+            if (raw) booking = JSON.parse(raw);
+            if (!booking) {
+              setAutoMsg("Data booking tidak ditemukan. Hubungi admin.");
+              return;
+            }
+            if (localStorage.getItem("paid_" + codeVal) !== "1") {
+              setAutoMsg("Pembayaran belum dikonfirmasi admin.");
+              return;
+            }
+            if (booking.type === "package") {
+              await generatePackageTicketPDF({ ...booking, isPaid: true });
+            } else {
+              await generateTravelTicketPDF({ ...booking, isPaid: true });
+            }
+            setAutoMsg("E-Tiket berhasil diunduh.");
+            setTimeout(() => setAutoMsg(""), 4000);
+          } catch {
+            setAutoMsg("Gagal mengunduh E-Tiket. Hubungi admin.");
+          }
+        }, 800);
+      } catch {
+        // ignore
       }
-      // trust admin link: mark paid if payload indicates paid
-      if (params.get("paid") === "1") {
-        localStorage.setItem("paid_" + codeVal, "1");
-      }
-    } catch {
-      // ignore
-    }
+    })();
   }, []);
 
   const generateDownloadLink = () => {
@@ -446,10 +474,16 @@ export default function TicketDownload() {
 
   return (
     <section className="max-w-3xl mx-auto px-4 py-8">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800 transition-colors">
-        <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
-          Download E-Tiket
-        </h3>
+      {autoMsg && (
+        <div className="mb-4 px-4 py-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-sm font-semibold text-center">
+          {autoMsg}
+        </div>
+      )}
+      {adminMode && (
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800 transition-colors">
+          <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
+            Download E-Tiket (Admin)
+          </h3>
         {adminMode && (
           <div className="mb-4 px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs font-semibold">
             Mode Admin aktif.
@@ -529,6 +563,7 @@ export default function TicketDownload() {
           </div>
         )}
       </div>
+      )}
     </section>
   );
 }
