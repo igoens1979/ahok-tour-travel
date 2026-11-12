@@ -43,7 +43,7 @@ export default function Footer() {
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <img src="/images/GoPay-logo.svg" alt="GoPay" className="h-8 w-auto" />
+            <img src="/images/GoPay-logo.svg" alt="GoPay" className="h-8 w-auto dark:drop-shadow-[0_0_6px_#60a5fa]" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
         </div>
