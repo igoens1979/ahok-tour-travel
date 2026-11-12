@@ -2,29 +2,11 @@ import { WHATSAPP_NUMBER } from "../utils/whatsapp";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-const BcaLogo = () => (
-  <svg viewBox="0 0 80 32" className="h-6 w-auto" xmlns="http://www.w3.org/2000/svg" aria-label="BCA">
-    <rect width="80" height="32" rx="6" fill="#005BAA" />
-    <text x="40" y="22" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold" fill="#ffffff">
-      BCA
-    </text>
-  </svg>
-);
-
 const DanaLogo = () => (
-  <svg viewBox="0 0 80 32" className="h-6 w-auto" xmlns="http://www.w3.org/2000/svg" aria-label="DANA">
-    <rect width="80" height="32" rx="6" fill="#118EEA" />
-    <text x="40" y="22" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold" fill="#ffffff">
+  <svg viewBox="0 0 120 40" className="h-7 w-auto" xmlns="http://www.w3.org/2000/svg" aria-label="DANA">
+    <rect width="120" height="40" rx="8" fill="#118EEA" />
+    <text x="60" y="27" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="bold" fill="#ffffff" letterSpacing="1">
       DANA
-    </text>
-  </svg>
-);
-
-const GopayLogo = () => (
-  <svg viewBox="0 0 80 32" className="h-6 w-auto" xmlns="http://www.w3.org/2000/svg" aria-label="GOPAY">
-    <rect width="80" height="32" rx="6" fill="#00AA5B" />
-    <text x="40" y="22" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="16" fontWeight="bold" fill="#ffffff">
-      GOPAY
     </text>
   </svg>
 );
@@ -51,9 +33,9 @@ export default function Footer() {
         </div>
 
         {/* Payment methods */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-8">
           <div className="flex flex-col items-center gap-1">
-            <BcaLogo />
+            <img src="/images/bca-logo.svg" alt="BCA" className="h-7 w-auto" />
             <span className="text-xs text-gray-600 dark:text-gray-400">1250864121</span>
           </div>
           <div className="flex flex-col items-center gap-1">
@@ -61,7 +43,7 @@ export default function Footer() {
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <GopayLogo />
+            <img src="/images/GoPay-logo.svg" alt="GoPay" className="h-7 w-auto" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
         </div>
