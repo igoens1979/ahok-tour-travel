@@ -361,30 +361,34 @@ export default function TravelSearch() {
                       className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Jadwal Konfirmasi Admin (opsional)
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="cth: 08:00 WIB"
-                      value={formData.confirmedSchedule}
-                      onChange={(e) => setFormData({ ...formData, confirmedSchedule: e.target.value })}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Harga Konfirmasi Admin (opsional)
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="cth: 150000"
-                      value={formData.confirmedPrice}
-                      onChange={(e) => setFormData({ ...formData, confirmedPrice: e.target.value })}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                    />
-                  </div>
+                  {!result?.price && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Jadwal Konfirmasi Admin (opsional)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="cth: 08:00 WIB"
+                          value={formData.confirmedSchedule}
+                          onChange={(e) => setFormData({ ...formData, confirmedSchedule: e.target.value })}
+                          className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Harga Konfirmasi Admin (opsional)
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="cth: 150000"
+                          value={formData.confirmedPrice}
+                          onChange={(e) => setFormData({ ...formData, confirmedPrice: e.target.value })}
+                          className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                        />
+                      </div>
+                    </>
+                  )}
                   <div>
                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Metode Pembayaran
