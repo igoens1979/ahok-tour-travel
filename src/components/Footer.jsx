@@ -21,7 +21,6 @@ function TransparentLogo({ src, alt, className }) {
       const imageData = ctx.getImageData(0, 0, w, h);
       const data = imageData.data;
 
-      // Determine background color from corner pixels
       const corners = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + (w - 1)) * 4];
       let br = 0, bg = 0, bb = 0, cnt = 0;
       corners.forEach((idx) => {
@@ -29,12 +28,11 @@ function TransparentLogo({ src, alt, className }) {
       });
       br = Math.round(br / cnt); bg = Math.round(bg / cnt); bb = Math.round(bb / cnt);
 
-      // Flood-fill from all border pixels to remove connected background
       const visited = new Uint8Array(w * h);
       const stack = [];
       const isBg = (i) => {
         const r = data[i], g = data[i + 1], b = data[i + 2];
-        return Math.abs(r - br) < 90 && Math.abs(g - bg) < 90 && Math.abs(b - bb) < 90;
+        return Math.abs(r - br) < 120 && Math.abs(g - bg) < 120 && Math.abs(b - bb) < 120;
       };
       for (let x = 0; x < w; x++) {
         stack.push(x);
@@ -61,7 +59,6 @@ function TransparentLogo({ src, alt, className }) {
       }
       ctx.putImageData(imageData, 0, 0);
 
-      // Crop to content bounding box
       let minX = w, minY = h, maxX = 0, maxY = 0;
       for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
@@ -124,11 +121,11 @@ export default function Footer() {
             <span className="text-xs text-gray-600 dark:text-gray-400">1250864121</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <TransparentLogo src="/images/dana-logo.png" alt="DANA" className="h-8 w-auto" />
+            <TransparentLogo src="/images/dana-logo.png" alt="DANA" className="h-8 w-auto dark:drop-shadow-[0_0_6px_#118eea]" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <img src="/images/GoPay-logo.svg" alt="GoPay" className="h-8 w-auto" />
+            <TransparentLogo src="/images/gopay-logo.jpg" alt="GoPay" className="h-8 w-auto dark:drop-shadow-[0_0_6px_#00aa5b]" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{WHATSAPP_NUMBER}</span>
           </div>
         </div>
