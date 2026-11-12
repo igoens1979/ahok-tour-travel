@@ -20,7 +20,12 @@ export default function Footer() {
             WhatsApp: +{WHATSAPP_NUMBER}
           </a>
           <span className="hidden sm:inline text-gray-400 dark:text-gray-600">|</span>
-          <span className="text-gray-600 dark:text-gray-400">Email: ahoksugiarto.325@gmail.com</span>
+          <a
+            href="mailto:ahoksugiarto.325@gmail.com"
+            className="text-gray-600 dark:text-gray-400 hover:underline"
+          >
+            Email: ahoksugiarto.325@gmail.com
+          </a>
         </div>
 
         {/* Payment methods */}
