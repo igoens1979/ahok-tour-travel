@@ -7,7 +7,7 @@ export const ROUTES_DATA = [
     price: 100000,
     promo: "10x gratis 1",
     schedules: ["03:00 WIB", "07:00 WIB", "08:00 WIB", "12:00 WIB", "13:00 WIB", "18:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "kdr-mlg",
@@ -16,7 +16,7 @@ export const ROUTES_DATA = [
     price: 100000,
     promo: "10x gratis 1",
     schedules: ["03:00 WIB", "07:00 WIB", "08:00 WIB", "12:00 WIB", "13:00 WIB", "18:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   // Malang - Madiun
   {
@@ -25,7 +25,7 @@ export const ROUTES_DATA = [
     destination: "Madiun",
     price: 130000,
     schedules: ["05:00 WIB", "07:00 WIB", "09:00 WIB", "13:00 WIB", "15:00 WIB", "17:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "mdn-mlg",
@@ -33,7 +33,7 @@ export const ROUTES_DATA = [
     destination: "Malang",
     price: 130000,
     schedules: ["05:00 WIB", "07:00 WIB", "09:00 WIB", "13:00 WIB", "15:00 WIB", "17:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   // Malang - Jogjakarta
   {
@@ -42,7 +42,7 @@ export const ROUTES_DATA = [
     destination: "Jogjakarta",
     price: 220000,
     schedules: ["07:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Makan 1x"],
   },
   {
     id: "yog-mlg",
@@ -50,7 +50,7 @@ export const ROUTES_DATA = [
     destination: "Malang",
     price: 220000,
     schedules: ["07:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Makan 1x"],
   },
   // Malang - Semarang
   {
@@ -59,7 +59,7 @@ export const ROUTES_DATA = [
     destination: "Semarang",
     price: 220000,
     schedules: ["07:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol Trans Jawa", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Full Tol Trans Jawa", "Makan 1x"],
   },
   {
     id: "smg-mlg",
@@ -67,7 +67,7 @@ export const ROUTES_DATA = [
     destination: "Malang",
     price: 220000,
     schedules: ["07:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol Trans Jawa", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Full Tol Trans Jawa", "Makan 1x"],
   },
   // Malang - Surabaya
   {
@@ -76,7 +76,7 @@ export const ROUTES_DATA = [
     destination: "Surabaya",
     price: 145000,
     schedules: ["02:00 WIB", "06:00 WIB", "09:00 WIB", "12:00 WIB", "14:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   // Surabaya - Malang
   {
@@ -85,7 +85,7 @@ export const ROUTES_DATA = [
     destination: "Malang",
     price: 145000,
     schedules: ["06:00 WIB", "09:00 WIB", "12:00 WIB", "15:00 WIB", "17:00 WIB", "19:00 WIB", "21:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   // Kediri - Surabaya
   {
@@ -94,7 +94,7 @@ export const ROUTES_DATA = [
     destination: "Surabaya",
     price: 130000,
     schedules: ["01:00 WIB", "06:00 WIB", "09:00 WIB", "13:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   // Surabaya - Kediri
   {
@@ -103,7 +103,7 @@ export const ROUTES_DATA = [
     destination: "Kediri",
     price: 130000,
     schedules: ["06:00 WIB", "09:00 WIB", "13:00 WIB", "16:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   // Kediri - Jogjakarta
   {
@@ -112,7 +112,7 @@ export const ROUTES_DATA = [
     destination: "Jogjakarta",
     price: 200000,
     schedules: ["10:00 WIB", "22:00 WIB", "07:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Via Tol", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Makan 1x"],
   },
   // Kediri - Semarang
   {
@@ -121,7 +121,7 @@ export const ROUTES_DATA = [
     destination: "Semarang",
     price: 200000,
     schedules: ["10:00 WIB", "22:00 WIB", "07:00 WIB", "19:00 WIB"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol Trans Jawa", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Full Tol Trans Jawa", "Makan 1x"],
   },
   // Other existing routes (price: chat admin)
   {
@@ -130,7 +130,7 @@ export const ROUTES_DATA = [
     destination: "Jember",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "mlg-bwi",
@@ -138,7 +138,7 @@ export const ROUTES_DATA = [
     destination: "Banyuwangi",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol"],
+    facilities: ["Door to Door", "AC", "Music", "Full Tol"],
   },
   {
     id: "mlg-dps",
@@ -146,7 +146,7 @@ export const ROUTES_DATA = [
     destination: "Denpasar Bali",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat", "Full Tol", "Makan 1x"],
+    facilities: ["Door to Door", "AC", "Music", "Full Tol", "Makan 1x"],
   },
   {
     id: "mlg-btp",
@@ -154,7 +154,7 @@ export const ROUTES_DATA = [
     destination: "Blitar Tulungagung dan Ponorogo",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "mlg-stb",
@@ -162,7 +162,7 @@ export const ROUTES_DATA = [
     destination: "Situbondo",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "sby-stb",
@@ -170,7 +170,7 @@ export const ROUTES_DATA = [
     destination: "Situbondo",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "sby-blt",
@@ -178,7 +178,7 @@ export const ROUTES_DATA = [
     destination: "Blitar",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "sby-jbr",
@@ -186,7 +186,7 @@ export const ROUTES_DATA = [
     destination: "Jember",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "sby-lmj",
@@ -194,7 +194,7 @@ export const ROUTES_DATA = [
     destination: "Lumajang",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "sby-bdw",
@@ -202,7 +202,7 @@ export const ROUTES_DATA = [
     destination: "Bondowoso",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "sby-blr",
@@ -210,7 +210,7 @@ export const ROUTES_DATA = [
     destination: "Blora",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "kdr-pct",
@@ -218,7 +218,7 @@ export const ROUTES_DATA = [
     destination: "Pacitan",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
   {
     id: "kdr-mdn",
@@ -226,7 +226,7 @@ export const ROUTES_DATA = [
     destination: "Madiun",
     price: null,
     schedules: ["Chat Admin 24 Jam"],
-    facilities: ["Door to Door", "AC", "Reclining Seat"],
+    facilities: ["Door to Door", "AC", "Music"],
   },
 ];
 
