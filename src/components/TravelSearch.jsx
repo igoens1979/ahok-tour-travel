@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { ROUTES_DATA, CITIES } from "../data/travelData";
 import { generateBookingWALink } from "../utils/whatsapp";
 
-const ADMIN_PASSWORD = "ahokadmin";
-
 export default function TravelSearch() {
   const [origin, setOrigin] = useState("Malang");
   const [destination, setDestination] = useState("Kediri");
@@ -30,54 +28,15 @@ export default function TravelSearch() {
     () => (typeof window !== "undefined" ? localStorage.getItem("ahok_admin") === "1" : false)
   );
 
-  const toggleAdminMode = () => {
-    if (adminMode) {
-      setAdminMode(false);
-      localStorage.removeItem("ahok_admin");
-      return;
-    }
-    const pwd = window.prompt("Masukkan password admin:");
-    if (pwd === ADMIN_PASSWORD) {
-      setAdminMode(true);
-      localStorage.setItem("ahok_admin", "1");
-    } else if (pwd !== null) {
-      alert("Password salah.");
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps, react(set-state-in-effect)
   useEffect(() => {
-    // Hidden admin access via URL param ?admin=1
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("admin") === "0") {
-        localStorage.removeItem("ahok_admin");
-        setAdminMode(false);
-        return;
-      }
-      if (params.get("admin") === "1" && !adminMode) {
-        const pwd = window.prompt("Masukkan password admin:");
-        if (pwd === ADMIN_PASSWORD) {
-          setAdminMode(true);
-          localStorage.setItem("ahok_admin", "1");
-        } else if (pwd !== null) {
-          alert("Password salah.");
-        }
-      }
-    } catch {
-      // ignore
-    }
-    // Hidden admin access via keyboard shortcut Ctrl+Shift+M
-    const handler = (e) => {
-      if (e.ctrlKey && e.shiftKey && (e.key === "M" || e.key === "m")) {
-        e.preventDefault();
-        toggleAdminMode();
-      }
+    const sync = () => setAdminMode(localStorage.getItem("ahok_admin") === "1");
+    window.addEventListener("ahok-admin-change", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("ahok-admin-change", sync);
+      window.removeEventListener("storage", sync);
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [adminMode]);
+  }, []);
 
   const handleSwitch = () => {
     setOrigin(destination);

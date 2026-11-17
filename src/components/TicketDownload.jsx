@@ -257,44 +257,14 @@ export default function TicketDownload() {
 
   /* eslint-disable react(set-state-in-effect) */
   useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("admin") === "0") {
-        localStorage.removeItem("ahok_admin");
-        setAdminMode(false);
-      }
-      if (params.get("admin") === "1" && !adminMode) {
-        const pwd = window.prompt("Masukkan password admin:");
-        if (pwd === "ahokadmin") {
-          setAdminMode(true);
-          localStorage.setItem("ahok_admin", "1");
-        } else if (pwd !== null) {
-          alert("Password salah.");
-        }
-      }
-    } catch {
-      // ignore
-    }
-    const handler = (e) => {
-      if (e.ctrlKey && e.shiftKey && (e.key === "M" || e.key === "m")) {
-        e.preventDefault();
-        if (adminMode) {
-          setAdminMode(false);
-          localStorage.removeItem("ahok_admin");
-        } else {
-          const pwd = window.prompt("Masukkan password admin:");
-          if (pwd === "ahokadmin") {
-            setAdminMode(true);
-            localStorage.setItem("ahok_admin", "1");
-          } else if (pwd !== null) {
-            alert("Password salah.");
-          }
-        }
-      }
+    const sync = () => setAdminMode(localStorage.getItem("ahok_admin") === "1");
+    window.addEventListener("ahok-admin-change", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("ahok-admin-change", sync);
+      window.removeEventListener("storage", sync);
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [adminMode]);
+  }, []);
   /* eslint-enable react(set-state-in-effect) */
 
   const handleDownload = async () => {

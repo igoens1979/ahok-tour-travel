@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Header from "./components/Header";
 import TravelSearch from "./components/TravelSearch";
 import PackageInfo from "./components/PackageInfo";
@@ -5,8 +6,33 @@ import TicketDownload from "./components/TicketDownload";
 import Footer from "./components/Footer";
 import ThemeToggle from "./components/ThemeToggle";
 import AdminTutorial from "./components/AdminTutorial";
+import { isAdminMode, setAdminMode, promptAdminPassword, toggleAdminMode } from "./utils/adminMode";
 
 export default function App() {
+  useEffect(() => {
+    // URL params
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("admin") === "0") {
+        setAdminMode(false);
+      }
+      if (params.get("admin") === "1" && !isAdminMode()) {
+        promptAdminPassword();
+      }
+    } catch {
+      // ignore
+    }
+    // Keyboard shortcut
+    const handler = (e) => {
+      if (e.ctrlKey && e.shiftKey && (e.key === "M" || e.key === "m")) {
+        e.preventDefault();
+        toggleAdminMode();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors">
       <ThemeToggle />
