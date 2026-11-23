@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function getAdminMode() {
   if (typeof window === "undefined") return false;
@@ -254,6 +254,8 @@ export default function TicketDownload() {
   const [code, setCode] = useState("");
   const [adminCodeInput, setAdminCodeInput] = useState("");
   const [autoMsg, setAutoMsg] = useState("");
+  const adminCodeRef = useRef(null);
+  const standaloneCodeRef = useRef(null);
 
   /* eslint-disable react(set-state-in-effect) */
   useEffect(() => {
@@ -268,7 +270,8 @@ export default function TicketDownload() {
   /* eslint-enable react(set-state-in-effect) */
 
   const handleDownload = async () => {
-    const c = code.trim().toUpperCase();
+    const refVal = standaloneCodeRef.current ? standaloneCodeRef.current.value : "";
+    const c = (refVal || code).trim().toUpperCase();
     if (!c) {
       alert("Masukkan kode booking.");
       return;
@@ -296,7 +299,7 @@ export default function TicketDownload() {
   };
 
   const handleMarkPaid = () => {
-    const c = code.trim().toUpperCase();
+    const c = getAdminCode();
     if (!c) {
       alert("Masukkan kode booking.");
       return;
@@ -316,7 +319,12 @@ export default function TicketDownload() {
     } catch {
       // ignore
     }
-    alert("Kode " + c + " ditandai LUNAS.");
+  };
+
+  const getAdminCode = () => {
+    const refVal = adminCodeRef.current ? adminCodeRef.current.value : "";
+    const val = refVal || adminCodeInput;
+    return val.trim().toUpperCase();
   };
 
   // Apply paid link from URL (?dl=CODE&payload=BASE64) so passenger on another device can download
@@ -383,7 +391,8 @@ export default function TicketDownload() {
   }, []);
 
   const generateDownloadLink = () => {
-    const c = code.trim().toUpperCase();
+    const refVal = standaloneCodeRef.current ? standaloneCodeRef.current.value : "";
+    const c = (refVal || code).trim().toUpperCase();
     if (!c) {
       alert("Masukkan kode booking.");
       return;
@@ -415,7 +424,7 @@ export default function TicketDownload() {
   };
 
   const handleAdminDownload = async () => {
-    const c = code.trim().toUpperCase();
+    const c = getAdminCode();
     if (!c) {
       alert("Masukkan kode booking.");
       return;
@@ -482,8 +491,8 @@ export default function TicketDownload() {
           <input
             type="text"
             placeholder="Kode Booking"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+            ref={standaloneCodeRef}
+            defaultValue={code}
             className="flex-1 h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
           />
           <button
@@ -504,8 +513,8 @@ export default function TicketDownload() {
               <input
                 type="text"
                 placeholder="Kode Booking"
-                value={adminCodeInput}
-                onChange={(e) => setAdminCodeInput(e.target.value)}
+                ref={adminCodeRef}
+                defaultValue={adminCodeInput}
                 className="flex-1 h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
               />
               <button
