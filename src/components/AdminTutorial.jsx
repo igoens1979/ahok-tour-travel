@@ -5,7 +5,13 @@ export default function AdminTutorial() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const sync = () => setAdminMode(localStorage.getItem("ahok_admin") === "1");
+    const sync = () => {
+      try {
+        setAdminMode(localStorage.getItem("ahok_admin") === "1");
+      } catch {
+        setAdminMode(false);
+      }
+    };
     sync();
     window.addEventListener("ahok-admin-change", sync);
     window.addEventListener("storage", sync);

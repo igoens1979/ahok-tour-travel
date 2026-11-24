@@ -3,9 +3,17 @@ import { WHATSAPP_NUMBER } from "../utils/whatsapp";
 
 function getInitialDark() {
   if (typeof window === "undefined") return false;
-  const stored = localStorage.getItem("theme");
-  if (stored) return stored === "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  try {
+    const stored = localStorage.getItem("theme");
+    if (stored) return stored === "dark";
+  } catch {
+    // ignore
+  }
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  } catch {
+    return false;
+  }
 }
 
 const btnBase =
@@ -17,7 +25,11 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("theme", dark ? "dark" : "light");
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch {
+      // ignore
+    }
   }, [dark]);
 
   useEffect(() => {
