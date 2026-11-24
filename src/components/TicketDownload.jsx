@@ -185,6 +185,9 @@ async function generatePackageTicketPDF(booking) {
 
   const rows = [
     ["Kode Booking", code],
+    ["Tanggal", booking.date || "-"],
+    ["Jam", booking.time || "-"],
+    ["Rute", booking.route || "-"],
     ["Nama Pengirim", booking.name || "-"],
     ["No Tlp / WA Pengirim", booking.phone || "-"],
     ["Nama Penerima", booking.recipientName || "-"],
@@ -192,6 +195,7 @@ async function generatePackageTicketPDF(booking) {
     ["Jenis Barang/Berat", booking.goods || "-"],
     ["Alamat Jemput", booking.pickup || "-"],
     ["Alamat Tujuan", booking.destinationAddr || "-"],
+    ["Biaya", booking.cost ? `Rp ${Number(booking.cost).toLocaleString("id-ID")}` : "-"],
     ["Metode Bayar", booking.paymentMethod || "-"],
   ];
   doc.setFontSize(11);

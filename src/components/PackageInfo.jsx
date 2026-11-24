@@ -11,6 +11,10 @@ export default function PackageInfo() {
     goods: "",
     pickup: "",
     destinationAddr: "",
+    date: "",
+    time: "",
+    route: "",
+    cost: "",
     paymentMethod: "Transfer",
   });
   const [bookingCode, setBookingCode] = useState("");
@@ -111,6 +115,43 @@ export default function PackageInfo() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Tanggal
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Jam
+                </label>
+                <input
+                  type="time"
+                  required
+                  value={formData.time}
+                  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Rute
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="cth: Malang - Surabaya"
+                  value={formData.route}
+                  onChange={(e) => setFormData({ ...formData, route: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Nama Pengirim
                 </label>
                 <input
@@ -195,6 +236,19 @@ export default function PackageInfo() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Biaya
+                </label>
+                <input
+                  type="number"
+                  required
+                  placeholder="cth: 150000"
+                  value={formData.cost}
+                  onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Metode Pembayaran
                 </label>
                 <select
@@ -209,7 +263,7 @@ export default function PackageInfo() {
               </div>
               <a
                 href={`https://wa.me/6281334987505?text=${encodeURIComponent(
-                  `Halo Admin AHOK Tour & Travel, saya ingin kirim paket:\n\n- Kode Booking: ${bookingCode}\n- Nama Pengirim: ${formData.name}\n- No Tlp/WA Pengirim: ${formData.phone}\n- Nama Penerima: ${formData.recipientName}\n- No Tlp/WA Penerima: ${formData.recipientPhone}\n- Jenis Barang/Berat: ${formData.goods}\n- Alamat Jemput: ${formData.pickup}\n- Alamat Tujuan: ${formData.destinationAddr}\n- Metode Pembayaran: ${formData.paymentMethod}\n\nMohon info tarif dan jadwal penjemputan. Terima kasih.`
+                  `Halo Admin AHOK Tour & Travel, saya ingin kirim paket:\n\n- Kode Booking: ${bookingCode}\n- Tanggal: ${formData.date}\n- Jam: ${formData.time}\n- Rute: ${formData.route}\n- Nama Pengirim: ${formData.name}\n- No Tlp/WA Pengirim: ${formData.phone}\n- Nama Penerima: ${formData.recipientName}\n- No Tlp/WA Penerima: ${formData.recipientPhone}\n- Jenis Barang/Berat: ${formData.goods}\n- Alamat Jemput: ${formData.pickup}\n- Alamat Tujuan: ${formData.destinationAddr}\n- Biaya: ${formData.cost}\n- Metode Pembayaran: ${formData.paymentMethod}\n\nMohon info tarif dan jadwal penjemputan. Terima kasih.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -220,6 +274,9 @@ export default function PackageInfo() {
                       JSON.stringify({
                         code: bookingCode,
                         type: "package",
+                        date: formData.date,
+                        time: formData.time,
+                        route: formData.route,
                         name: formData.name,
                         phone: formData.phone,
                         recipientName: formData.recipientName,
@@ -227,6 +284,7 @@ export default function PackageInfo() {
                         goods: formData.goods,
                         pickup: formData.pickup,
                         destinationAddr: formData.destinationAddr,
+                        cost: formData.cost,
                         paymentMethod: formData.paymentMethod,
                       })
                     );
