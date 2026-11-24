@@ -252,7 +252,6 @@ export default function TicketDownload() {
   const [adminMode, setAdminMode] = useState(getAdminMode);
   const [ticketType, setTicketType] = useState("travel");
   const [code, setCode] = useState("");
-  const [adminCodeInput, setAdminCodeInput] = useState("");
   const [autoMsg, setAutoMsg] = useState("");
   const adminCodeRef = useRef(null);
   const standaloneCodeRef = useRef(null);
@@ -391,7 +390,7 @@ export default function TicketDownload() {
   }, []);
 
   const generateDownloadLink = () => {
-    const refVal = standaloneCodeRef.current ? standaloneCodeRef.current.value : "";
+    const refVal = (adminCodeRef.current && adminCodeRef.current.value) || (standaloneCodeRef.current && standaloneCodeRef.current.value) || "";
     const c = (refVal || code).trim().toUpperCase();
     if (!c) {
       alert("Masukkan kode booking.");
