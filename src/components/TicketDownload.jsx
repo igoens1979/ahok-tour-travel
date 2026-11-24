@@ -33,8 +33,10 @@ async function generateTravelTicketPDF(booking) {
   const count = Math.max(1, Number(booking.count) || 1);
   const schedule = booking.schedule || "";
   const price = booking.price;
+  const extra = Number(booking.extraBaggage) || 0;
   const priceText = price ? `Rp ${price.toLocaleString("id-ID")} / orang` : "Chat Admin 24 Jam";
-  const totalText = price ? `Rp ${(price * count).toLocaleString("id-ID")}` : "Tlp/Chat Admin";
+  const totalNum = (price ? price * count : 0) + extra;
+  const totalText = price ? `Rp ${totalNum.toLocaleString("id-ID")}` : "Chat Admin 24 Jam";
   const facilities = Array.isArray(booking.facilities) ? booking.facilities : [];
 
   const logoData = await svgToPng("/logo.svg", 200, 200);
@@ -82,6 +84,7 @@ async function generateTravelTicketPDF(booking) {
     ["Alamat Tujuan", booking.destinationAddr || "-"],
     ["Metode Bayar", booking.paymentMethod || "-"],
     ["Harga Tiket", priceText],
+    ["Biaya Tambahan LB/Over Bagasi", extra ? `Rp ${extra.toLocaleString("id-ID")}` : "-"],
     ["Total", totalText],
     ["Fasilitas", facilities.join(", ") || "-"],
   ];

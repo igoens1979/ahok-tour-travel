@@ -22,6 +22,8 @@ export default function TravelSearch() {
     paymentMethod: "Transfer",
     confirmedSchedule: "",
     confirmedPrice: "",
+    price: "",
+    extraBaggage: "",
   });
 
   const [adminMode, setAdminMode] = useState(
@@ -66,6 +68,10 @@ export default function TravelSearch() {
     setBookingCode(route ? code : "");
 
     setIsSubmitted(true);
+    setFormData((prev) => ({
+      ...prev,
+      price: route && route.price ? String(route.price) : prev.price,
+    }));
   };
 
   const finalSchedule =
@@ -74,6 +80,8 @@ export default function TravelSearch() {
     (result ? result.schedules[0] : "");
   const finalPrice = formData.confirmedPrice
     ? Number(formData.confirmedPrice)
+    : formData.price
+    ? Number(formData.price)
     : result
     ? result.price
     : null;
@@ -344,6 +352,30 @@ export default function TravelSearch() {
                   )}
                   <div>
                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Harga
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="Harga tiket"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Biaya Tambahan LB/Over Bagasi
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={formData.extraBaggage}
+                      onChange={(e) => setFormData({ ...formData, extraBaggage: e.target.value })}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Metode Pembayaran
                     </label>
                     <select
@@ -369,6 +401,7 @@ export default function TravelSearch() {
                       destination,
                       schedule: finalSchedule,
                       price: finalPrice,
+                      extraBaggage: formData.extraBaggage,
                     })}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -398,6 +431,7 @@ export default function TravelSearch() {
                             destination,
                             schedule: finalSchedule,
                             price: finalPrice,
+                            extraBaggage: formData.extraBaggage,
                           })
                         );
                       } catch {
