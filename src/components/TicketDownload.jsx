@@ -456,11 +456,10 @@ export default function TicketDownload() {
           {autoMsg}
         </div>
       )}
-      {adminMode && (
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800 transition-colors">
-          <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
-            Download E-Tiket (Admin)
-          </h3>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-6 md:p-8 border border-transparent dark:border-gray-800 transition-colors">
+        <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-300 mb-1">
+          Download E-Tiket
+        </h3>
         {adminMode && (
           <div className="mb-4 px-3 py-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs font-semibold">
             Mode Admin aktif.
@@ -540,7 +539,6 @@ export default function TicketDownload() {
           </div>
         )}
       </div>
-      )}
     </section>
   );
 }
