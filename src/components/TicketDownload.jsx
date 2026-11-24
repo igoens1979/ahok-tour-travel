@@ -364,31 +364,23 @@ export default function TicketDownload() {
           localStorage.setItem("paid_" + codeVal, "1");
         }
         // Auto-download after a short delay to allow state/localStorage to settle
-        setAutoMsg("Mengunduh E-Tiket...");
+        setAutoMsg("E-Tiket siap diunduh. Klik tombol Download di bawah (atau tunggu download otomatis).");
+        // Attempt auto-download (may be blocked by browser; button remains as fallback)
         setTimeout(async () => {
           try {
             let booking = null;
             const raw = localStorage.getItem("booking_" + codeVal);
             if (raw) booking = JSON.parse(raw);
-            if (!booking) {
-              setAutoMsg("Data booking tidak ditemukan. Hubungi admin.");
-              return;
-            }
-            if (localStorage.getItem("paid_" + codeVal) !== "1") {
-              setAutoMsg("Pembayaran belum dikonfirmasi admin.");
-              return;
-            }
+            if (!booking || localStorage.getItem("paid_" + codeVal) !== "1") return;
             if (booking.type === "package") {
               await generatePackageTicketPDF({ ...booking, isPaid: true });
             } else {
               await generateTravelTicketPDF({ ...booking, isPaid: true });
             }
-            setAutoMsg("E-Tiket berhasil diunduh.");
-            setTimeout(() => setAutoMsg(""), 4000);
           } catch {
-            setAutoMsg("Gagal mengunduh E-Tiket. Hubungi admin.");
+            // ignore; user can click button
           }
-        }, 800);
+        }, 600);
       } catch {
         // ignore
       }
