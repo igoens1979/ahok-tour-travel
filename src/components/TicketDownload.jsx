@@ -322,8 +322,7 @@ export default function TicketDownload() {
 
   const getAdminCode = () => {
     const refVal = adminCodeRef.current ? adminCodeRef.current.value : "";
-    const val = refVal || adminCodeInput;
-    return val.trim().toUpperCase();
+    return (refVal || "").trim().toUpperCase();
   };
 
   // Apply paid link from URL (?dl=CODE&payload=BASE64) so passenger on another device can download
@@ -513,7 +512,7 @@ export default function TicketDownload() {
                 type="text"
                 placeholder="Kode Booking"
                 ref={adminCodeRef}
-                defaultValue={adminCodeInput}
+                defaultValue=""
                 className="flex-1 h-10 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
               />
               <button
