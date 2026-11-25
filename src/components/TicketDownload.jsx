@@ -78,7 +78,7 @@ async function generateTravelTicketPDF(booking) {
     ["Nama Penumpang", name],
     ["No Tlp / WA", booking.phone || "-"],
     ["Jumlah", `${count} orang`],
-    ["Rute", `${booking.origin} - ${booking.destination}`],
+    ["Rute", booking.route || `${booking.origin} - ${booking.destination}`],
     ["Jadwal", schedule],
     ["Alamat Jemput", booking.pickup || "-"],
     ["Alamat Tujuan", booking.destinationAddr || "-"],
@@ -419,12 +419,7 @@ export default function TicketDownload() {
             } else {
               res = await generateTravelTicketPDF({ ...booking, isPaid: true });
             }
-            if (res && res.url) {
-              
-              
-              
-              // Open PDF directly in browser viewer (works on mobile & desktop)
-              try { window.open(res.url, "_blank"); } catch { /* ignore */ }
+            if (res && res.doc) {
               // attempt auto-download (may be blocked on mobile)
               setTimeout(() => {
                 try { res.doc.save(res.filename); } catch { /* ignore */ }
@@ -473,15 +468,12 @@ export default function TicketDownload() {
             pk: booking.pickup,
             da: booking.destinationAddr,
             pm: booking.paymentMethod,
-            o: booking.origin,
-            d: booking.destination,
             s: booking.schedule,
             r: booking.price,
-            f: booking.facilities,
             eb: booking.extraBaggage,
             dt: booking.date,
             tm: booking.time,
-            rt: booking.route,
+            rt: booking.route || `${booking.origin} - ${booking.destination}`,
           }
         : null,
     };
@@ -526,10 +518,7 @@ export default function TicketDownload() {
     } else {
       res = await generateTravelTicketPDF({ ...booking, isPaid: true });
     }
-    if (res && res.url) {
-      
-      
-      
+    if (res && res.doc) {
       setTimeout(() => {
         try { res.doc.save(res.filename); } catch { /* ignore */ }
       }, 800);
