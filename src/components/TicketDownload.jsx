@@ -358,19 +358,41 @@ export default function TicketDownload() {
         if (!dl) return;
         const codeVal = dl.trim().toUpperCase();
         setCode(codeVal);
-        const payload = params.get("payload");
+        const payload = params.get("p");
         if (payload) {
           try {
             const decoded = JSON.parse(atob(payload));
-            if (decoded && decoded.booking) {
-              localStorage.setItem("booking_" + codeVal, JSON.stringify(decoded.booking));
+            if (decoded && decoded.b) {
+              const b = decoded.b;
+              const booking = {
+                code: b.code || codeVal,
+                type: b.type,
+                name: b.n,
+                phone: b.ph,
+                recipientName: b.rn,
+                recipientPhone: b.rp,
+                goods: b.g,
+                pickup: b.pk,
+                destinationAddr: b.da,
+                paymentMethod: b.pm,
+                origin: b.o,
+                destination: b.d,
+                schedule: b.s,
+                price: b.r,
+                facilities: b.f,
+                extraBaggage: b.eb,
+                date: b.dt,
+                time: b.tm,
+                route: b.rt,
+              };
+              localStorage.setItem("booking_" + codeVal, JSON.stringify(booking));
             }
-            if (decoded && decoded.paid) {
+            if (decoded && decoded.p) {
               localStorage.setItem("paid_" + codeVal, "1");
             }
-            if (decoded.booking && decoded.booking.type === "package") {
+            if (decoded.b && decoded.b.type === "package") {
               setTicketType("package");
-            } else if (decoded.booking && decoded.booking.type !== "package") {
+            } else if (decoded.b && decoded.b.type !== "package") {
               setTicketType("travel");
             }
           } catch {
@@ -434,14 +456,40 @@ export default function TicketDownload() {
     } catch {
       booking = null;
     }
-    const payload = { code: c, booking, paid: true };
+    const compact = {
+      c,
+      p: true,
+      b: booking
+        ? {
+            code: booking.code,
+            type: booking.type,
+            n: booking.name,
+            ph: booking.phone,
+            rn: booking.recipientName,
+            rp: booking.recipientPhone,
+            g: booking.goods,
+            pk: booking.pickup,
+            da: booking.destinationAddr,
+            pm: booking.paymentMethod,
+            o: booking.origin,
+            d: booking.destination,
+            s: booking.schedule,
+            r: booking.price,
+            f: booking.facilities,
+            eb: booking.extraBaggage,
+            dt: booking.date,
+            tm: booking.time,
+            rt: booking.route,
+          }
+        : null,
+    };
     let encoded = "";
     try {
-      encoded = btoa(JSON.stringify(payload));
+      encoded = btoa(JSON.stringify(compact));
     } catch {
       encoded = "";
     }
-    const url = `${window.location.origin}${window.location.pathname}?dl=${encodeURIComponent(c)}&payload=${encodeURIComponent(encoded)}`;
+    const url = `${window.location.origin}${window.location.pathname}?dl=${encodeURIComponent(c)}&p=${encodeURIComponent(encoded)}`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url).then(() => alert("Link download disalin ke clipboard.\nBagikan ke penumpang via WhatsApp.")).catch(() => alert(url));
     } else {
