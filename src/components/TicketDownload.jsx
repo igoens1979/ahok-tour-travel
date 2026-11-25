@@ -141,8 +141,7 @@ async function generateTravelTicketPDF(booking) {
 
   const _blob = doc.output("blob");
   const _url = URL.createObjectURL(_blob);
-  try { window.open(_url, "_blank"); } catch { /* ignore */ }
-  doc.save(`E-Tiket-${code}.pdf`);
+  return { doc, url: _url, filename: `E-Tiket-${code}.pdf` };
 }
 
 async function generatePackageTicketPDF(booking) {
@@ -257,8 +256,7 @@ async function generatePackageTicketPDF(booking) {
 
   const _blob2 = doc.output("blob");
   const _url2 = URL.createObjectURL(_blob2);
-  try { window.open(_url2, "_blank"); } catch { /* ignore */ }
-  doc.save(`E-Tiket-Paket-${code}.pdf`);
+  return { doc, url: _url2, filename: `E-Tiket-Paket-${code}.pdf` };
 }
 
 export default function TicketDownload() {
@@ -266,6 +264,9 @@ export default function TicketDownload() {
   const [ticketType, setTicketType] = useState("travel");
   const [code, setCode] = useState("");
   const [autoMsg, setAutoMsg] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewDoc, setPreviewDoc] = useState(null);
+  const [previewName, setPreviewName] = useState("");
   const adminCodeRef = useRef(null);
   const standaloneCodeRef = useRef(null);
 
@@ -303,10 +304,20 @@ export default function TicketDownload() {
       alert("Pembayaran belum dikonfirmasi admin.");
       return;
     }
+    let res;
     if (ticketType === "package" || (booking.type === "package")) {
-      await generatePackageTicketPDF({ ...booking, isPaid: true });
+      res = await generatePackageTicketPDF({ ...booking, isPaid: true });
     } else {
-      await generateTravelTicketPDF({ ...booking, isPaid: true });
+      res = await generateTravelTicketPDF({ ...booking, isPaid: true });
+    }
+    if (res && res.url) {
+      setPreviewUrl(res.url);
+      setPreviewDoc(res.doc);
+      setPreviewName(res.filename);
+      // attempt auto-download
+      setTimeout(() => {
+        try { res.doc.save(res.filename); } catch { /* ignore */ }
+      }, 800);
     }
   };
 
@@ -378,10 +389,20 @@ export default function TicketDownload() {
             const raw = localStorage.getItem("booking_" + codeVal);
             if (raw) booking = JSON.parse(raw);
             if (!booking || localStorage.getItem("paid_" + codeVal) !== "1") return;
+            let res;
             if (booking.type === "package") {
-              await generatePackageTicketPDF({ ...booking, isPaid: true });
+              res = await generatePackageTicketPDF({ ...booking, isPaid: true });
             } else {
-              await generateTravelTicketPDF({ ...booking, isPaid: true });
+              res = await generateTravelTicketPDF({ ...booking, isPaid: true });
+            }
+            if (res && res.url) {
+              setPreviewUrl(res.url);
+              setPreviewDoc(res.doc);
+              setPreviewName(res.filename);
+              // attempt auto-download
+              setTimeout(() => {
+                try { res.doc.save(res.filename); } catch { /* ignore */ }
+              }, 400);
             }
           } catch {
             // ignore; user can click button
@@ -447,10 +468,19 @@ export default function TicketDownload() {
       alert("Data booking tidak ada di perangkat ini. Admin dapat membuat ulang dengan kode booking " + c + ".");
       return;
     }
+    let res;
     if (ticketType === "package" || booking.type === "package") {
-      await generatePackageTicketPDF({ ...booking, isPaid: true });
+      res = await generatePackageTicketPDF({ ...booking, isPaid: true });
     } else {
-      await generateTravelTicketPDF({ ...booking, isPaid: true });
+      res = await generateTravelTicketPDF({ ...booking, isPaid: true });
+    }
+    if (res && res.url) {
+      setPreviewUrl(res.url);
+      setPreviewDoc(res.doc);
+      setPreviewName(res.filename);
+      setTimeout(() => {
+        try { res.doc.save(res.filename); } catch { /* ignore */ }
+      }, 800);
     }
   };
 
@@ -544,6 +574,37 @@ export default function TicketDownload() {
           </div>
         )}
       </div>
+
+      {previewUrl && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white">Preview E-Tiket</h3>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (previewDoc && previewName) {
+                      try { previewDoc.save(previewName); } catch { /* ignore */ }
+                    }
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-blue-900 text-white text-xs font-semibold hover:bg-blue-800 transition"
+                >
+                  Download
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setPreviewUrl(null); setPreviewDoc(null); setPreviewName(""); }}
+                  className="px-3 py-1.5 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+            <iframe src={previewUrl} className="w-full flex-1 min-h-[60vh]" title="E-Tiket PDF" />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
