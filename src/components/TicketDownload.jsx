@@ -139,11 +139,8 @@ async function generateTravelTicketPDF(booking) {
   doc.setFont(undefined, "normal");
   doc.text("AHOK Tour & Travel  •  Travel Antar Kota & Pengiriman Paket  •  WA: +6281334987505", pageW / 2, 293, { align: "center" });
 
-  const _blob = doc.output("blob");
-  const _url = URL.createObjectURL(_blob);
-  try { window.open(_url, "_blank"); } catch { /* ignore */ }
   doc.save(`E-Tiket-${code}.pdf`);
-  return { doc, url: _url, filename: `E-Tiket-${code}.pdf` };
+  return { doc, url: null, filename: `E-Tiket-${code}.pdf` };
 }
 
 async function generatePackageTicketPDF(booking) {
@@ -256,11 +253,8 @@ async function generatePackageTicketPDF(booking) {
   doc.setFont(undefined, "normal");
   doc.text("AHOK Tour & Travel  •  Pengiriman Paket & Dokumen  •  WA: +6281334987505", pageW / 2, 293, { align: "center" });
 
-  const _blob2 = doc.output("blob");
-  const _url2 = URL.createObjectURL(_blob2);
-  try { window.open(_url2, "_blank"); } catch { /* ignore */ }
   doc.save(`E-Tiket-Paket-${code}.pdf`);
-  return { doc, url: _url2, filename: `E-Tiket-Paket-${code}.pdf` };
+  return { doc, url: null, filename: `E-Tiket-Paket-${code}.pdf` };
 }
 
 export default function TicketDownload() {
@@ -311,10 +305,7 @@ export default function TicketDownload() {
     } else {
       res = await generateTravelTicketPDF({ ...booking, isPaid: true });
     }
-    if (res && res.url) {
-      setPreviewUrl(res.url);
-      setPreviewDoc(res.doc);
-      setPreviewName(res.filename);
+    if (res && res.doc) {
       // attempt auto-download
       setTimeout(() => {
         try { res.doc.save(res.filename); } catch { /* ignore */ }
@@ -357,8 +348,18 @@ export default function TicketDownload() {
         const params = new URLSearchParams(window.location.search);
         const dl = params.get("dl");
         if (!dl) return;
+        // Prevent repeated downloads on refresh/re-render
+        const guardKey = "dl_done_" + dl;
+        if (sessionStorage.getItem(guardKey)) return;
+        sessionStorage.setItem(guardKey, "1");
         const codeVal = dl.trim().toUpperCase();
         setCode(codeVal);
+        // Clean URL so refresh doesn't re-trigger download
+        try {
+          window.history.replaceState({}, "", window.location.pathname);
+        } catch {
+          // ignore
+        }
         const payload = params.get("p");
         if (payload) {
           try {
@@ -419,9 +420,9 @@ export default function TicketDownload() {
               res = await generateTravelTicketPDF({ ...booking, isPaid: true });
             }
             if (res && res.url) {
-              setPreviewUrl(res.url);
-              setPreviewDoc(res.doc);
-              setPreviewName(res.filename);
+              
+              
+              
               // Open PDF directly in browser viewer (works on mobile & desktop)
               try { window.open(res.url, "_blank"); } catch { /* ignore */ }
               // attempt auto-download (may be blocked on mobile)
@@ -526,9 +527,9 @@ export default function TicketDownload() {
       res = await generateTravelTicketPDF({ ...booking, isPaid: true });
     }
     if (res && res.url) {
-      setPreviewUrl(res.url);
-      setPreviewDoc(res.doc);
-      setPreviewName(res.filename);
+      
+      
+      
       setTimeout(() => {
         try { res.doc.save(res.filename); } catch { /* ignore */ }
       }, 800);
