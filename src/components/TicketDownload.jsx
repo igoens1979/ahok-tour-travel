@@ -399,10 +399,12 @@ export default function TicketDownload() {
               setPreviewUrl(res.url);
               setPreviewDoc(res.doc);
               setPreviewName(res.filename);
-              // attempt auto-download
+              // Open PDF directly in browser viewer (works on mobile & desktop)
+              try { window.open(res.url, "_blank"); } catch { /* ignore */ }
+              // attempt auto-download (may be blocked on mobile)
               setTimeout(() => {
                 try { res.doc.save(res.filename); } catch { /* ignore */ }
-              }, 400);
+              }, 600);
             }
           } catch {
             // ignore; user can click button
